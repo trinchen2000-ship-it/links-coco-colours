@@ -15,7 +15,7 @@ body{background:#0a0a0a;color:var(--white);font-family:'Poppins',sans-serif;min-
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
 .page{max-width:480px;margin:0 auto;padding:40px 18px 80px;position:relative;z-index:1}
 header{text-align:center;margin-bottom:32px}
-.studio-name{font-family:'Tan Mon Cheri',serif;font-size:34px;letter-spacing:7px;color:var(--white);line-height:1;margin-bottom:4px}
+.studio-name{font-family:'Tan Mon Cheri',serif;font-size:34px;letter-spacing:7px;color:var(--white);line-height:1.5;margin-bottom:4px}
 .studio-sub{font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 .studio-loc{font-size:11px;color:var(--gold);letter-spacing:2px}
 .divider{display:flex;align-items:center;gap:12px;margin:22px 0 14px}
@@ -31,13 +31,13 @@ header{text-align:center;margin-bottom:32px}
 .link-card:hover{background:#1a1a1a;transform:translateX(3px)}.link-card:hover::before{opacity:1}
 .link-card.hl{border-color:rgba(201,168,76,.3);background:#131310}.link-card.hl .link-title{color:var(--gold-l)}
 .link-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#202020;flex-shrink:0}
-.link-text{flex:1}.link-title{font-family:'Tan Mon Cheri',serif;font-size:15px;letter-spacing:1px;margin-bottom:3px}.link-desc{font-size:11px;color:var(--muted);line-height:1.4}.link-arrow{color:var(--border2);font-size:18px;flex-shrink:0}
+.link-text{flex:1}.link-title{font-family:'Tan Mon Cheri',serif;font-size:15px;letter-spacing:2px;margin-bottom:3px;text-transform:uppercase}.link-desc{font-size:11px;color:var(--muted);line-height:1.4}.link-arrow{color:var(--border2);font-size:18px;flex-shrink:0}
 /* TOOL CARDS */
 .tool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
 .tool-header{display:flex;align-items:center;gap:14px;padding:17px 16px;cursor:pointer;user-select:none;transition:background .2s}
 .tool-header:hover{background:#1a1a1a}
 .tool-icon{font-size:20px;width:42px;height:42px;background:#1e1e1e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.tool-info{flex:1}.tool-name{font-family:'Tan Mon Cheri',serif;font-size:18px;letter-spacing:2px;margin-bottom:2px}.tool-hint{font-size:11px;color:var(--muted)}
+.tool-info{flex:1}.tool-name{font-family:'Tan Mon Cheri',serif;font-size:18px;letter-spacing:3px;margin-bottom:2px;text-transform:uppercase}.tool-hint{font-size:11px;color:var(--muted)}
 .tool-chevron{color:var(--muted);font-size:13px;transition:transform .3s}.tool-card.open .tool-chevron{transform:rotate(180deg)}
 .tool-body{max-height:0;overflow:hidden;transition:max-height .45s ease}.tool-card.open .tool-body{max-height:2400px;border-top:1px solid var(--border)}
 .tool-content{padding:20px 16px 22px}
@@ -200,8 +200,8 @@ footer{text-align:center;padding-top:28px}.footer-text{font-size:9px;color:#333;
 
   <div class="divider"><div class="div-line"></div><span class="div-label">Folg uns</span><div class="div-line"></div></div>
   <div class="social-row">
-    <a class="social-btn" href="https://www.instagram.com/cococolourstattoo/" target="_blank"><span class="social-icon">📸</span><span class="social-lbl">Instagram</span><span class="social-name">@cococolourstattoo</span></a>
-    <a class="social-btn" href="https://www.facebook.com/cococolourstattoo" target="_blank"><span class="social-icon">👥</span><span class="social-lbl">Facebook</span><span class="social-name">Coco Colours</span></a>
+    <a class="social-btn" href="https://www.instagram.com/cococolourstattoo/" target="_blank"><span class="social-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span><span class="social-lbl">Instagram</span><span class="social-name">@cococolourstattoo</span></a>
+    <a class="social-btn" href="https://www.facebook.com/cococolourstattoo" target="_blank"><span class="social-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></span><span class="social-lbl">Facebook</span><span class="social-name">Coco Colours</span></a>
     <a class="social-btn" href="https://www.coco-colours.de" target="_blank"><span class="social-icon">🌐</span><span class="social-lbl">Website</span><span class="social-name">coco-colours.de</span></a>
   </div>
 
@@ -808,6 +808,8 @@ function showStilResult(symData){
   ];
   a.forEach((ans,qi)=>{if(maps[qi])(maps[qi][ans]||[]).forEach(i=>{if(i<w.length)w[i]+=2;});});
   const r=SR[w.indexOf(Math.max(...w))]||SR[0];
+  // Alle Ergebnis-Begriffe für den Slot speichern
+  ST.slotPool=[...r.ex, ...(symData||[]).map(s=>s.n)];
   let h=`<div class="result-tag">${r.tag}</div>
     <div class="result-style">${r.name}</div>
     <p class="result-desc">${r.desc}</p>
@@ -819,7 +821,7 @@ function showStilResult(symData){
       +symData.map(s=>`<div class="sym-card"><div class="sym-glyph">${s.g}</div><div class="sym-info"><div class="s-trad">${s.trad||''}</div><div class="s-name">${s.n}</div><div class="s-mean">${s.b}</div></div></div>`).join('')
       +`</div>`;
   }
-  h+=endCTA();
+  h+=endCTA(true);
   html('popupContent',h);
 }
 
@@ -903,50 +905,193 @@ function showSymResult(syms){
   setHdr(100,'Deine Symbole',true);
   const tradN=ST.tradition.map(k=>TRADS.find(t=>t.k===k)?.t||k).join(' · ');
   const meanN=ST.meaning.map(k=>MEANS.find(m=>m.k===k)?.t||k).join(', ');
+  ST.slotPool=syms.map(s=>s.n); // Symbole für Slot speichern
   let h=`<div class="result-tag">${tradN}</div>
     <div class="result-style" style="font-size:22px;line-height:1.2;margin-bottom:12px">${meanN}</div>
     <p class="result-desc">Symbole die zu deiner Suche passen. Kombiniere sie oder lass uns gemeinsam weiterentwickeln.</p>
     <div class="sym-cards">${syms.map(s=>`<div class="sym-card"><div class="sym-glyph">${s.g}</div><div class="sym-info"><div class="s-trad">${s.trad||tradN}</div><div class="s-name">${s.n}</div><div class="s-mean">${s.b}</div></div></div>`).join('')}</div>`;
-  h+=endCTA();
+  h+=endCTA(true);
   html('popupContent',h);
 }
 
-function endCTA(){
+function endCTA(hasPool){
+  const slotBtn=hasPool
+    ? `<button class="btn-secondary" onclick="showSlot(true)">🎰 Aus meinen Ergebnissen spinnen</button>`
+    : `<button class="btn-secondary" onclick="showSlot(false)">🎰 Lass den Zufall entscheiden</button>`;
   return `<div class="end-cta">
     <a class="btn-primary" href="https://anfrage.coco-colours.de" target="_blank">✍️ Bei Coco Colours anfragen</a>
     <div class="cta-or">oder</div>
-    <button class="btn-secondary" onclick="push('showSymResult');showSlot()">🎰 Lass den Zufall entscheiden</button>
+    ${slotBtn}
     <button class="btn-ghost" onclick="showWelcome()">↩ Nochmal von vorne</button>
   </div>`;
 }
 
 // ======== SLOT MACHINE ========
 let spinning=false; let slotRes=[];
-function showSlot(skip,back){
-  setHdr(100,'Symbol-Maschine',true);
-  document.getElementById('popupTitle').textContent='SYMBOL-MASCHINE';
-  const all=getAllSymbols();
+// ======== TATTOO MOTIVE SLOT MACHINE ========
+const MOTIVE_DATA = {
+  tiere:[
+    {n:'Wolf',b:'Stärke, Loyalität, Intuition — der Rudel-Anführer',t:'stärke,führung,intuition,wildnis'},
+    {n:'Löwe',b:'Mut, Königliche Würde, innere Stärke',t:'stärke,mut,führung,macht'},
+    {n:'Tiger',b:'Kraft, Leidenschaft, ungezähmte Energie',t:'stärke,leidenschaft,energie,wildnis'},
+    {n:'Adler',b:'Freiheit, Weitblick, göttliche Verbindung',t:'freiheit,weisheit,vision,spirituell'},
+    {n:'Drache',b:'Weisheit, Schutz, übernatürliche Stärke',t:'stärke,weisheit,schutz,macht'},
+    {n:'Schlange',b:'Transformation, Heilung, Erneuerung',t:'transformation,heilung,neubeginn,sinnlichkeit'},
+    {n:'Fuchs',b:'Klugheit, Anpassungsfähigkeit, Magie',t:'weisheit,kreativität,transformation'},
+    {n:'Rabe',b:'Intelligenz, Mysterium, Wandel',t:'weisheit,transformation,spirituell'},
+    {n:'Eule',b:'Weisheit, Nacht, verborgenes Wissen',t:'weisheit,spirituell,geheimnis'},
+    {n:'Bär',b:'Stärke, Schutz, Mutterkraft',t:'stärke,schutz,kraft'},
+    {n:'Hirsch',b:'Anmut, Würde, natürliche Führung',t:'würde,freiheit,natur,stärke'},
+    {n:'Panther',b:'Stärke, Sinnlichkeit, nächtliche Kraft',t:'stärke,sinnlichkeit,macht,wildnis'},
+    {n:'Jaguar',b:'Stärke, Sinnlichkeit, schamanische Kraft',t:'stärke,sinnlichkeit,spirituell,wildnis'},
+    {n:'Gepard',b:'Schnelligkeit, Fokus, Präzision',t:'stärke,erfolg,freiheit'},
+    {n:'Hai',b:'Dominanz, Überlebenswille, Stärke',t:'stärke,mut,wildnis'},
+    {n:'Oktopus',b:'Intelligenz, Anpassung, Vielschichtigkeit',t:'weisheit,transformation,kreativität'},
+    {n:'Pferd',b:'Freiheit, Stärke, Leidenschaft',t:'freiheit,stärke,leidenschaft'},
+    {n:'Elefant',b:'Weisheit, Gedächtnis, familiäre Treue',t:'weisheit,stärke,familie,treue'},
+    {n:'Koi',b:'Ausdauer, Mut gegen den Strom, Erfolg',t:'ausdauer,mut,erfolg,transformation'},
+    {n:'Schmetterling',b:'Transformation, Freiheit, Schönheit der Vergänglichkeit',t:'transformation,freiheit,schönheit,neubeginn'},
+    {n:'Libelle',b:'Leichtigkeit, Veränderung, Selbsterkenntnis',t:'transformation,freiheit,spirituell'},
+    {n:'Kolibri',b:'Lebensfreude, Ausdauer, Leichtigkeit',t:'freude,ausdauer,freiheit,liebe'},
+    {n:'Schwalbe',b:'Freiheit, Heimkehr, Treue',t:'freiheit,heimat,treue,liebe'},
+    {n:'Phönix',b:'Wiedergeburt, Unzerstörbarkeit, neue Stärke',t:'transformation,neubeginn,stärke,spirituell'},
+    {n:'Krähe',b:'Intelligenz, Magie, Übergang',t:'weisheit,transformation,spirituell'},
+    {n:'Fledermaus',b:'Intuition, Erneuerung, nächtliche Kraft',t:'intuition,transformation,spirituell'},
+    {n:'Delfin',b:'Intelligenz, Freude, Verbindung',t:'freude,liebe,freiheit,intelligenz'},
+    {n:'Wal',b:'Tiefe Weisheit, emotionale Stärke, Gemeinschaft',t:'weisheit,stärke,verbindung,spirituell'},
+    {n:'Mantarochen',b:'Anmut, Freiheit, Eleganz im Fluss',t:'freiheit,eleganz,frieden'},
+    {n:'Seepferdchen',b:'Geduld, Ausdauer, väterliche Fürsorge',t:'ausdauer,schutz,familie'},
+    {n:'Katze',b:'Unabhängigkeit, Sinnlichkeit, Anmut',t:'sinnlichkeit,freiheit,eleganz,unabhängigkeit'},
+    {n:'Hund',b:'Treue, Loyalität, bedingungslose Liebe',t:'treue,liebe,verbindung'},
+    {n:'Stier',b:'Stärke, Sinnlichkeit, Beständigkeit',t:'stärke,sinnlichkeit,ausdauer'},
+    {n:'Falke',b:'Fokus, Freiheit, himmlische Verbindung',t:'freiheit,vision,stärke,spirituell'},
+    {n:'Flamingo',b:'Anmut, Schönheit, Selbstbewusstsein',t:'schönheit,eleganz,sinnlichkeit'},
+    {n:'Krokodil',b:'Urkraft, Geduld, alter Überlebenswille',t:'stärke,ausdauer,wildnis'},
+    {n:'Chamäleon',b:'Anpassung, Wandel, Vielschichtigkeit',t:'transformation,anpassung,kreativität'},
+    {n:'Salamander',b:'Regeneration, Feuerresistenz, Widerstandskraft',t:'transformation,stärke,neubeginn'},
+    {n:'Pelikan',b:'Selbstaufopferung, Fürsorge, Ausdauer',t:'liebe,schutz,ausdauer'},
+  ],
+  pflanzen:[
+    {n:'Rose',b:'Liebe, Schönheit, Leidenschaft — mit Dornen: Stärke',t:'liebe,schönheit,leidenschaft,sinnlichkeit'},
+    {n:'Lotus',b:'Reinheit die aus dem Schlamm wächst — Erleuchtung',t:'spirituell,neubeginn,reinheit,transformation'},
+    {n:'Kirschblüte',b:'Vergänglichkeit, Schönheit des Moments',t:'schönheit,vergänglichkeit,neubeginn'},
+    {n:'Pfingstrose',b:'Wohlstand, Schönheit, weibliche Stärke',t:'schönheit,sinnlichkeit,erfolg,weiblichkeit'},
+    {n:'Sonnenblume',b:'Lebensfreude, Treue, Kraft der Sonne',t:'freude,treue,energie,liebe'},
+    {n:'Dornen',b:'Schutz, Schmerz der Stärkt, dunkle Schönheit',t:'schutz,stärke,sinnlichkeit'},
+    {n:'Mohnblume',b:'Schlaf, Erinnerung, stille Schönheit',t:'spirituell,erinnerung,frieden'},
+    {n:'Lilie',b:'Reinheit, Unschuld, Schönheit',t:'reinheit,schönheit,spirituell'},
+    {n:'Orchidee',b:'Sinnlichkeit, Exotik, Raffinesse',t:'sinnlichkeit,schönheit,eleganz'},
+    {n:'Lavendel',b:'Ruhe, Heilung, zarte Stärke',t:'frieden,heilung,spirituell'},
+    {n:'Bambus',b:'Flexibilität und Stärke — biegt sich, bricht nicht',t:'stärke,ausdauer,anpassung'},
+    {n:'Kaktus',b:'Stärke in der Einsamkeit, Selbstschutz',t:'stärke,unabhängigkeit,schutz'},
+    {n:'Efeu',b:'Ewige Verbindung, Loyalität, Wachstum',t:'verbindung,treue,wachstum'},
+    {n:'Farn',b:'Uralt, Natürlichkeit, Wachstum im Verborgenen',t:'natur,wachstum,spirituell'},
+    {n:'Kleeblatt',b:'Glück, Hoffnung, Schutz',t:'glück,schutz,frieden'},
+    {n:'Magnolie',b:'Würde, Beständigkeit, natürliche Anmut',t:'würde,schönheit,ausdauer'},
+    {n:'Pusteblume',b:'Freiheit, Wünsche, loslassen',t:'freiheit,neubeginn,transformation'},
+    {n:'Wildblumen',b:'Ungezähmte Schönheit, Freiheit',t:'freiheit,schönheit,natur'},
+    {n:'Weinrebe',b:'Fruchtbarkeit, Genuss, Verbindung',t:'sinnlichkeit,verbindung,freude'},
+    {n:'Olivenzweig',b:'Frieden, Weisheit, Versöhnung',t:'frieden,weisheit,harmonie'},
+  ],
+  symbole:[
+    {n:'Totenkopf',b:'Vergänglichkeit, Mut dem Tod ins Auge zu blicken',t:'mut,transformation,stärke'},
+    {n:'Anker',b:'Stabilität, Halt, Bodenständigkeit',t:'stabilität,treue,heimat'},
+    {n:'Herz',b:'Liebe, Mitgefühl, emotionale Stärke',t:'liebe,sinnlichkeit,verbindung'},
+    {n:'Kompass',b:'Orientierung, innere Führung, eigener Weg',t:'freiheit,orientierung,stärke'},
+    {n:'Krone',b:'Selbstbestimmung, innerer König/Königin',t:'stärke,macht,würde'},
+    {n:'Schlüssel',b:'Freiheit, Geheimnisse öffnen, Zugang',t:'freiheit,transformation,weisheit'},
+    {n:'Unendlichkeit',b:'Ewige Verbindung, endlose Möglichkeiten',t:'liebe,ewigkeit,verbindung'},
+    {n:'Mandala',b:'Innere Ordnung, Ganzheit, Meditation',t:'spirituell,frieden,gleichgewicht'},
+    {n:'Traumfänger',b:'Schutz vor Negativem, spirituelle Führung',t:'schutz,spirituell,frieden'},
+    {n:'Blitz',b:'Energie, Stärke, plötzlicher Wandel',t:'stärke,energie,transformation'},
+    {n:'Auge',b:'Allsehend, Schutz, innere Weisheit',t:'weisheit,schutz,spirituell'},
+    {n:'Spirale',b:'Wachstum, Lebensreise, ewiger Wandel',t:'transformation,wachstum,spirituell'},
+    {n:'Pfeil',b:'Richtung, Fokus, vorwärts',t:'stärke,mut,ziel,freiheit'},
+    {n:'Sanduhr',b:'Vergänglichkeit, der Wert des Moments',t:'vergänglichkeit,weisheit,transformation'},
+    {n:'Noten',b:'Freiheit des Ausdrucks, Emotion durch Musik',t:'freiheit,kreativität,leidenschaft'},
+  ],
+  mystisch:[
+    {n:'Meerjungfrau',b:'Sinnlichkeit, Freiheit, unergründliche Tiefe',t:'sinnlichkeit,freiheit,geheimnis'},
+    {n:'Pegasus',b:'Freiheit, Inspiration, Aufstieg',t:'freiheit,kreativität,transformation'},
+    {n:'Einhorn',b:'Reinheit, Magie, das Besondere',t:'reinheit,schönheit,spirituell'},
+    {n:'Medusa',b:'Weibliche Stärke, Schutz, gefährliche Schönheit',t:'stärke,schutz,weiblichkeit,sinnlichkeit'},
+    {n:'Samurai',b:'Ehre, Disziplin, Bereitschaft zum Opfer',t:'stärke,ehre,disziplin,mut'},
+    {n:'Geisha',b:'Eleganz, Disziplin, verborgene Stärke',t:'eleganz,sinnlichkeit,stärke,weisheit'},
+    {n:'Oni',b:'Schutz vor Bösem, ungezähmte Kraft',t:'schutz,stärke,wildnis'},
+    {n:'Hannya',b:'Verborgene Tiefe, Leidenschaft, Transformation',t:'sinnlichkeit,transformation,leidenschaft'},
+    {n:'Kitsune',b:'Intelligenz, Magie, Vielschichtigkeit',t:'weisheit,transformation,sinnlichkeit'},
+    {n:'Valkyrie',b:'Kriegerin, weibliche Stärke, Schicksal',t:'stärke,mut,weiblichkeit,führung'},
+    {n:'Hexe',b:'Weibliche Macht, Natur, Magie',t:'macht,weiblichkeit,spirituell,transformation'},
+    {n:'Fee',b:'Leichtigkeit, Magie, verborgene Welt',t:'freiheit,schönheit,spirituell'},
+    {n:'Engel',b:'Schutz, göttliche Verbindung, Hoffnung',t:'schutz,spirituell,liebe'},
+    {n:'Sphinx',b:'Rätsel, Weisheit, Hüterin des Wissens',t:'weisheit,stärke,geheimnis'},
+  ],
+  natur:[
+    {n:'Welle',b:'Kraft der Natur, Überwindung, Fluss des Lebens',t:'stärke,freiheit,transformation'},
+    {n:'Berg',b:'Standhaftigkeit, Ziele erreichen, innere Stärke',t:'stärke,ausdauer,mut'},
+    {n:'Vulkan',b:'Ungezähmte Kraft, Leidenschaft, Transformation',t:'stärke,leidenschaft,transformation'},
+    {n:'Aurora',b:'Schönheit des Wandels, seltene Momente',t:'schönheit,transformation,spirituell'},
+    {n:'Kristall',b:'Klarheit, innere Reinheit, Energie',t:'reinheit,spirituell,energie'},
+    {n:'Feder',b:'Freiheit, spirituelle Verbindung, Leichtigkeit',t:'freiheit,spirituell,transformation'},
+    {n:'Flamme',b:'Leidenschaft, Transformation, inneres Feuer',t:'leidenschaft,transformation,energie,sinnlichkeit'},
+    {n:'Nordlicht',b:'Magie, seltene Schönheit, Staunen',t:'schönheit,spirituell,freiheit'},
+    {n:'Galaxie',b:'Unendlichkeit, kosmische Verbindung',t:'spirituell,freiheit,ewigkeit'},
+    {n:'Wald',b:'Wurzeln, Wachstum, natürliche Weisheit',t:'heimat,wachstum,spirituell'},
+  ],
+  objekte:[
+    {n:'Gitarre',b:'Freiheit des Ausdrucks, Leidenschaft, Kreativität',t:'freiheit,leidenschaft,kreativität'},
+    {n:'Uhr',b:'Vergänglichkeit, Wert der Zeit, Erinnerung',t:'vergänglichkeit,weisheit,erinnerung'},
+    {n:'Schiff',b:'Reise, Abenteuer, in See stechen',t:'freiheit,mut,abenteuer'},
+    {n:'Leuchtturm',b:'Orientierung, Hoffnung, Stärke im Sturm',t:'stärke,orientierung,schutz'},
+    {n:'Katana',b:'Präzision, Ehre, Krieger-Disziplin',t:'stärke,ehre,disziplin'},
+    {n:'Rüstung',b:'Schutz, innere Stärke, Unverwundbarkeit',t:'schutz,stärke,mut'},
+    {n:'Buch',b:'Wissen, Weisheit, Welten in sich',t:'weisheit,kreativität,spirituell'},
+  ],
+};
+
+// Flatten für Slot (name only) und Bedeutungs-Lookup
+const ALL_MOTIVE = Object.values(MOTIVE_DATA).flat().map(m=>m.n);
+const MOTIVE_MAP = {};
+Object.values(MOTIVE_DATA).flat().forEach(m=>{MOTIVE_MAP[m.n]=m;});
+
+function getRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function showSlot(usePool,back){
+  const pool=usePool&&ST.slotPool&&ST.slotPool.length>=2?ST.slotPool:null;
+  const source=pool||ALL_MOTIVE;
+  setHdr(100,'Slot Machine',true);
+  document.getElementById('popupTitle').textContent='TATTOO MACHINE';
+  const subtitle=pool
+    ?`Spinnt nur aus deinen Ergebnissen — Google-Bildersuche inklusive.`
+    :`3 zufällige Motive — lass dich inspirieren. Google-Suche mit einem Klick.`;
+
   let reelHtml='';
   for(let i=0;i<3;i++){
     let items='';
-    for(let j=0;j<6;j++){const s=all[Math.floor(Math.random()*all.length)];items+=`<div class="slot-item"><div class="slot-glyph">${s.g}</div><div class="slot-name">${s.n}</div></div>`;}
+    for(let j=0;j<8;j++){
+      const m=getRandom(source);
+      items+=`<div class="slot-item"><div class="slot-glyph" style="font-size:13px;font-family:'Poppins',sans-serif;font-weight:500">${m}</div></div>`;
+    }
     reelHtml+=`<div class="slot-reel"><div class="slot-reel-inner" id="ri${i}">${items}</div><div class="slot-shine"></div><div class="slot-line"></div></div>`;
   }
+
   html('popupContent',`
     <div class="slot-wrap">
       <div class="slot-head">
         <div class="slot-head-icon">🎰</div>
-        <div class="slot-head-title">SPIN & INSPIRE</div>
-        <p class="slot-head-sub">Dreh die Maschine und lass dich von drei zufälligen Symbolen inspirieren.</p>
+        <div class="slot-head-title">TATTOO MACHINE</div>
+        <p class="slot-head-sub">${subtitle}</p>
+        ${pool?`<div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:4px">${pool.map(m=>`<span style="padding:3px 9px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:20px;font-size:10px;color:#c9a84c">${m}</span>`).join('')}</div>`:''}
       </div>
       <div class="slot-display">${reelHtml}</div>
-      <div class="slot-controls"><button class="slot-spin-btn" id="spinBtn" onclick="spinSlot()">⬛ SPIN ⬛</button></div>
+      <div class="slot-controls"><button class="slot-spin-btn" id="spinBtn" onclick="spinSlot(${!!pool})">⬛ SPIN ⬛</button></div>
     </div>
     <div class="slot-result" id="slotResult">
       <div class="slot-combo-title">Deine Kombination</div>
       <div class="slot-combo-cards" id="slotCards"></div>
       <div class="slot-story" id="slotStory"></div>
-      ${endCTA()}
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px" id="googleBtns"></div>
+      ${endCTA(!!pool)}
     </div>`);
 }
 
@@ -957,23 +1102,28 @@ const STORIES=[
   (a,b,c)=>`Die Energie von ${a} fließt durch ${b} und mündet in ${c}. Selten sieht man eine Kombination die so viel sagt.`,
 ];
 
-function spinSlot(){
+function spinSlot(usePool){
   if(spinning)return;
+  const pool=usePool&&ST.slotPool&&ST.slotPool.length>=2?ST.slotPool:null;
+  const source=pool||ALL_MOTIVE;
   spinning=true;
   document.getElementById('spinBtn').disabled=true;
   document.getElementById('slotResult').classList.remove('show');
-  const all=getAllSymbols(); slotRes=[];
+  slotRes=[];
   [0,1,2].forEach(i=>{
-    const chosen=all[Math.floor(Math.random()*all.length)];
+    const chosen=getRandom(source);
     slotRes.push(chosen);
     const inner=document.getElementById('ri'+i);
     let items='';
-    for(let j=0;j<20;j++){const s=all[Math.floor(Math.random()*all.length)];items+=`<div class="slot-item"><div class="slot-glyph">${s.g}</div><div class="slot-name">${s.n}</div></div>`;}
-    items+=`<div class="slot-item" style="background:rgba(201,168,76,.07)"><div class="slot-glyph" style="font-size:28px">${chosen.g}</div><div class="slot-name" style="color:var(--gold)">${chosen.n}</div></div>`;
+    for(let j=0;j<20;j++){
+      const m=getRandom(source);
+      items+=`<div class="slot-item"><div class="slot-glyph" style="font-size:13px;font-family:'Poppins',sans-serif;font-weight:500">${m}</div></div>`;
+    }
+    items+=`<div class="slot-item" style="background:rgba(201,168,76,.07)"><div class="slot-glyph" style="font-size:14px;font-family:'Poppins',sans-serif;font-weight:600;color:var(--gold)">${chosen}</div></div>`;
     inner.innerHTML=items;
     inner.style.transition='none';inner.style.transform='translateY(0)';
     let pos=0;const spd=7+i*2;
-    const iv=setInterval(()=>{pos-=spd;if(pos<-(inner.children.length-2)*95)pos=0;inner.style.transform=`translateY(${pos}px)`;} ,16);
+    const iv=setInterval(()=>{pos-=spd;if(pos<-(inner.children.length-2)*95)pos=0;inner.style.transform=`translateY(${pos}px)`;},16);
     setTimeout(()=>{
       clearInterval(iv);
       const total=(inner.children.length-1)*95;
@@ -983,11 +1133,41 @@ function spinSlot(){
     },600+i*500);
   });
 }
+
+function googleSearch(q){
+  window.open('https://www.google.com/search?q='+encodeURIComponent(q+' tattoo')+'&tbm=isch','_blank');
+}
+
 function showSlotResult(){
-  document.getElementById('slotCards').innerHTML=slotRes.map(s=>`<div class="slot-combo-card"><div class="slot-combo-glyph">${s.g}</div><div><div class="slot-combo-name">${s.n}</div><div class="slot-combo-mean">${s.b}</div></div></div>`).join('');
-  document.getElementById('slotStory').textContent=STORIES[Math.floor(Math.random()*STORIES.length)](slotRes[0].n,slotRes[1].n,slotRes[2].n);
+  document.getElementById('slotCards').innerHTML=slotRes.map(m=>{
+    const info=MOTIVE_MAP[m]||{};
+    return `<div class="slot-combo-card">
+      <div style="font-size:20px">🎯</div>
+      <div style="flex:1">
+        <div class="slot-combo-name">${m}</div>
+        ${info.b?`<div class="slot-combo-mean">${info.b}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('slotStory').textContent=STORIES[Math.floor(Math.random()*STORIES.length)](slotRes[0],slotRes[1],slotRes[2]);
+
+  // Google Buttons
+  const btns=document.getElementById('googleBtns');
+  btns.innerHTML=`
+    <button onclick="googleSearch('${slotRes[0]} ${slotRes[1]} ${slotRes[2]}')"
+      style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:10px;color:#0a0a0a;font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;cursor:pointer">
+      🔍 Alle drei zusammen googeln
+    </button>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      ${slotRes.map(m=>`<button onclick="googleSearch('${m}')"
+        style="padding:10px 6px;background:var(--card2);border:1px solid var(--border);border-radius:9px;color:var(--white);font-family:'Poppins',sans-serif;font-size:11px;cursor:pointer">
+        🔍 ${m}
+      </button>`).join('')}
+    </div>`;
+
   document.getElementById('slotResult').classList.add('show');
 }
+
 
 // ======== TOOL TOGGLE ========
 function toggleTool(id){document.getElementById(id).classList.toggle('open');}
@@ -1003,15 +1183,17 @@ function switchPflege(tab,btn){
 // ======== RECHNER ========
 let selZone=null,selMotivKey=null;
 const zN={hals:'Hals / Nacken',schulter:'Schulter',brust:'Brust',bauch:'Bauch',rippen:'Rippen / Seite',oberarm:'Oberarm',unterarm:'Unterarm',handgelenk:'Handgelenk',ruecken:'Rücken / Hüfte',oberschenkel:'Oberschenkel',wade:'Wade',fuss:'Fuß / Knöchel',finger:'Finger'};
-document.querySelectorAll('.body-zone').forEach(z=>{
+document.querySelectorAll('.body-zone').forEach(function(z){
   z.addEventListener('click',function(){
-    document.querySelectorAll('.body-zone').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll(`[data-zone="${this.dataset.zone}"]`).forEach(x=>x.classList.add('active'));
-    selZone=this.dataset.zone;
-    document.getElementById('bodyLbl').textContent=zN[selZone]||selZone;
+    const zone=this.dataset.zone;
+    document.querySelectorAll('.body-zone').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('[data-zone="'+zone+'"]').forEach(function(x){x.classList.add('active');});
+    selZone=zone;
+    document.getElementById('bodyLbl').textContent=zN[zone]||zone;
+    document.getElementById('calcRes').classList.remove('show');
   });
 });
-function selMotivFn(btn){document.querySelectorAll('.motiv-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selMotivKey=btn.dataset.m;}
+function selMotivFn(btn){document.querySelectorAll('.motiv-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selMotivKey=btn.dataset.m;document.getElementById('calcRes').classList.remove('show');}
 function selMotiv(btn){selMotivFn(btn);}
 function updSlider(el){const v=el.value;document.getElementById('cxVal').textContent=['','Simpel','Mittel','Detailliert'][v];document.getElementById('cxFill').style.width=((v-1)/2*100)+'%';}
 const GDB={
