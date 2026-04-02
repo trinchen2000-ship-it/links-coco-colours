@@ -201,14 +201,14 @@ footer{text-align:center;padding-top:28px}.footer-text{font-size:9px;color:#333;
   <div class="divider"><div class="div-line"></div><span class="div-label">Folg uns</span><div class="div-line"></div></div>
   <div class="social-row">
     <a class="social-btn" href="https://www.instagram.com/cococolourstattoo/" target="_blank"><span class="social-icon">📸</span><span class="social-lbl">Instagram</span><span class="social-name">@cococolourstattoo</span></a>
-    <a class="social-btn" href="https://www.facebook.com/cococolours/" target="_blank"><span class="social-icon">👥</span><span class="social-lbl">Facebook</span><span class="social-name">Coco Colours</span></a>
+    <a class="social-btn" href="https://www.facebook.com/cococolourstattoo" target="_blank"><span class="social-icon">👥</span><span class="social-lbl">Facebook</span><span class="social-name">Coco Colours</span></a>
     <a class="social-btn" href="https://www.coco-colours.de" target="_blank"><span class="social-icon">🌐</span><span class="social-lbl">Website</span><span class="social-name">coco-colours.de</span></a>
   </div>
 
   <div class="divider"><div class="div-line"></div><span class="div-label">Direkte Links</span><div class="div-line"></div></div>
   <div class="links-grid">
     <a class="link-card" href="https://wannado-tool-production.up.railway.app/shop" target="_blank"><div class="link-icon">⚡</div><div class="link-text"><div class="link-title">Wannados unserer Artists</div><div class="link-desc">Fertige Flash-Motive — sofort buchbar</div></div><span class="link-arrow">›</span></a>
-    <a class="link-card" href="https://galerie.coco-colours.de" target="_blank"><div class="link-icon">🎨</div><div class="link-text"><div class="link-title">Artist Galerie</div><div class="link-desc">Portfolios aller Artists bei Coco Colours</div></div><span class="link-arrow">›</span></a>
+    <a class="link-card" href="https://galerie.coco-colours.de/galerie" target="_blank"><div class="link-icon">🎨</div><div class="link-text"><div class="link-title">Artist Galerie</div><div class="link-desc">Portfolios aller Artists bei Coco Colours</div></div><span class="link-arrow">›</span></a>
     <a class="link-card hl" href="https://anfrage.coco-colours.de" target="_blank"><div class="link-icon">✍️</div><div class="link-text"><div class="link-title">Tattoo anfragen</div><div class="link-desc">Motiv, Stil, Körperstelle — alles hier starten</div></div><span class="link-arrow">›</span></a>
     <a class="link-card" href="https://vorlagen.coco-colours.de" target="_blank"><div class="link-icon">📎</div><div class="link-text"><div class="link-title">Vorlagen hochladen</div><div class="link-desc">Referenzbilder zu einem bestehenden Termin</div></div><span class="link-arrow">›</span></a>
   </div>
@@ -887,7 +887,7 @@ function submitMean(){
   const result=[];
   ST.tradition.forEach(tk=>{
     const tradObj=TRADS.find(t=>t.k===tk);
-    const pool=(SYMBOLE[tk]||[]).map(s=>{...s,trad:tradObj?.t||''});
+    const pool=(SYMBOLE[tk]||[]).map(s=>({...s,trad:tradObj?.t||''}));
     const scored=pool.map(s=>{
       const tags=(s.t||'').split(',');
       return{...s,score:meanings.filter(m=>tags.includes(m)).length};
