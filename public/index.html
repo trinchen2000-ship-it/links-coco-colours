@@ -201,14 +201,14 @@ footer{text-align:center;padding-top:28px}.footer-text{font-size:9px;color:#333;
   <div class="divider"><div class="div-line"></div><span class="div-label">Folg uns</span><div class="div-line"></div></div>
   <div class="social-row">
     <a class="social-btn" href="https://www.instagram.com/cococolourstattoo/" target="_blank"><span class="social-icon">📸</span><span class="social-lbl">Instagram</span><span class="social-name">@cococolourstattoo</span></a>
-    <a class="social-btn" href="https://www.facebook.com/cococolourstattoo/" target="_blank"><span class="social-icon">👥</span><span class="social-lbl">Facebook</span><span class="social-name">Coco Colours</span></a>
+    <a class="social-btn" href="https://www.facebook.com/cococolours/" target="_blank"><span class="social-icon">👥</span><span class="social-lbl">Facebook</span><span class="social-name">Coco Colours</span></a>
     <a class="social-btn" href="https://www.coco-colours.de" target="_blank"><span class="social-icon">🌐</span><span class="social-lbl">Website</span><span class="social-name">coco-colours.de</span></a>
   </div>
 
   <div class="divider"><div class="div-line"></div><span class="div-label">Direkte Links</span><div class="div-line"></div></div>
   <div class="links-grid">
     <a class="link-card" href="https://wannado-tool-production.up.railway.app/shop" target="_blank"><div class="link-icon">⚡</div><div class="link-text"><div class="link-title">Wannados unserer Artists</div><div class="link-desc">Fertige Flash-Motive — sofort buchbar</div></div><span class="link-arrow">›</span></a>
-    <a class="link-card" href="https://galerie.coco-colours.de/galerie" target="_blank"><div class="link-icon">🎨</div><div class="link-text"><div class="link-title">Artist Galerie</div><div class="link-desc">Portfolios aller Artists bei Coco Colours</div></div><span class="link-arrow">›</span></a>
+    <a class="link-card" href="https://galerie.coco-colours.de" target="_blank"><div class="link-icon">🎨</div><div class="link-text"><div class="link-title">Artist Galerie</div><div class="link-desc">Portfolios aller Artists bei Coco Colours</div></div><span class="link-arrow">›</span></a>
     <a class="link-card hl" href="https://anfrage.coco-colours.de" target="_blank"><div class="link-icon">✍️</div><div class="link-text"><div class="link-title">Tattoo anfragen</div><div class="link-desc">Motiv, Stil, Körperstelle — alles hier starten</div></div><span class="link-arrow">›</span></a>
     <a class="link-card" href="https://vorlagen.coco-colours.de" target="_blank"><div class="link-icon">📎</div><div class="link-text"><div class="link-title">Vorlagen hochladen</div><div class="link-desc">Referenzbilder zu einem bestehenden Termin</div></div><span class="link-arrow">›</span></a>
   </div>
@@ -1001,7 +1001,7 @@ function switchPflege(tab,btn){
 }
 
 // ======== RECHNER ========
-let selZone=null,selMotiv=null;
+let selZone=null,selMotivKey=null;
 const zN={hals:'Hals / Nacken',schulter:'Schulter',brust:'Brust',bauch:'Bauch',rippen:'Rippen / Seite',oberarm:'Oberarm',unterarm:'Unterarm',handgelenk:'Handgelenk',ruecken:'Rücken / Hüfte',oberschenkel:'Oberschenkel',wade:'Wade',fuss:'Fuß / Knöchel',finger:'Finger'};
 document.querySelectorAll('.body-zone').forEach(z=>{
   z.addEventListener('click',function(){
@@ -1011,7 +1011,7 @@ document.querySelectorAll('.body-zone').forEach(z=>{
     document.getElementById('bodyLbl').textContent=zN[selZone]||selZone;
   });
 });
-function selMotivFn(btn){document.querySelectorAll('.motiv-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selMotiv=btn.dataset.m;}
+function selMotivFn(btn){document.querySelectorAll('.motiv-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selMotivKey=btn.dataset.m;}
 function selMotiv(btn){selMotivFn(btn);}
 function updSlider(el){const v=el.value;document.getElementById('cxVal').textContent=['','Simpel','Mittel','Detailliert'][v];document.getElementById('cxFill').style.width=((v-1)/2*100)+'%';}
 const GDB={
@@ -1031,8 +1031,8 @@ const GDB={
 };
 const GN={hals:'Statement-Tattoo — sichtbar, mutig.',schulter:'Gut für runde Motive die der Körperform folgen.',brust:'Große Fläche, sehr wirkungsvoll.',bauch:'Unterschätzte Fläche, gute Heilung.',rippen:'Schmerzhaft aber ikonisch — heilt gut.',oberarm:'Klassiker für Sleeves.',unterarm:'Gut heilend, viel Platz.',handgelenk:'Schmale Fläche — simpel halten.',ruecken:'Die große Leinwand.',oberschenkel:'Unterschätzte Stelle — gute Heilung.',wade:'Klassisch und gut sichtbar.',fuss:'Verblasst schneller — regelmäßig auffrischen.',finger:'Verblasst sehr schnell — oft nachstechen nötig.'};
 function berechne(){
-  if(!selZone||!selMotiv){alert('Bitte Körperstelle und Motiv-Typ wählen.');return;}
-  const size=(GDB[selZone]||{})[selMotiv]||'–';
+  if(!selZone||!selMotivKey){alert('Bitte Körperstelle und Motiv-Typ wählen.');return;}
+  const size=(GDB[selZone]||{})[selMotivKey]||'–';
   document.getElementById('calcSize').textContent=size;
   document.getElementById('calcSub').textContent=(zN[selZone]||selZone)+' · '+(document.querySelector('.motiv-btn.active')?.textContent?.trim()||selMotiv);
   document.getElementById('calcNote').textContent=GN[selZone]||'';
@@ -1146,7 +1146,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup();});
     // Größen-Rechner
     const _berechne = window.berechne;
     if (_berechne) window.berechne = function() {
-      track('rechner', { zone: window.selZone||'', motiv: window.selMotiv||'' });
+      track('rechner', { zone: window.selZone||'', motiv: window.selMotivKey||'' });
       return _berechne.apply(this, arguments);
     };
 
