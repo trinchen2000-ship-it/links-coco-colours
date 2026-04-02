@@ -172,11 +172,11 @@ app.get('/dashboard', async (req, res) => {
                   FROM events WHERE created_at > NOW()-INTERVAL'24 hours'
                   GROUP BY h ORDER BY h`),
 
-      pool.query(`SELECT DATE(created_at) day,
-                    COUNT(DISTINCT session_id) sessions,
-                    COUNT(*) events
+      pool.query(`SELECT DATE(created_at) AS tag,
+                    COUNT(DISTINCT session_id) AS sessions,
+                    COUNT(*) AS events
                   FROM events WHERE created_at > NOW()-INTERVAL'30 days'
-                  GROUP BY day ORDER BY day DESC LIMIT 30`),
+                  GROUP BY tag ORDER BY tag DESC LIMIT 30`),
 
       pool.query(`SELECT event_data->>'link' link, event_data->>'text' txt, COUNT(*) cnt
                   FROM events WHERE event_type='click_link'
@@ -353,7 +353,7 @@ ${card('Sessions & Events pro Tag', `
       <tbody>
         ${d.daily.map(r => `
           <tr style="border-bottom:1px solid #161616">
-            <td style="padding:6px 8px 6px 0;color:#888">${fmtDay(r.day)}</td>
+            <td style="padding:6px 8px 6px 0;color:#888">${fmtDay(r.tag)}</td>
             <td style="padding:6px 8px;color:#c9a84c;text-align:right">${r.sessions}</td>
             <td style="padding:6px 8px;color:#555;text-align:right">${r.events}</td>
           </tr>`).join('')}
