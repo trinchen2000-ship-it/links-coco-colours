@@ -328,7 +328,7 @@ footer{text-align:center;padding-top:28px}.footer-text{font-size:9px;color:#333;
 <script>
 // ======== SYMBOL DB (270+ Symbole, 15 Traditionen) ========
 const SYMBOLE={
-  nordisch:[
+nordisch:[
     {n:"Fehu",g:"ᚠ",b:"Wohlstand, Fülle, Neubeginn — erste Rune des Futharks",t:"freiheit,erfolg,neubeginn"},
     {n:"Uruz",g:"ᚢ",b:"Wilde Kraft, Stärke, Gesundheit — die Auerochsen-Rune",t:"stärke,kraft,gesundheit"},
     {n:"Thurisaz",g:"ᚦ",b:"Schutz, Abwehr, Grenzen setzen — der Donnerkeil",t:"schutz,kraft,verteidigung"},
@@ -652,8 +652,206 @@ const SYMBOLE={
     {n:"Fledermaus (Biān Fú)",g:"🦇",b:"Glück — das chinesische Wort für Fledermaus klingt wie Glück",t:"glück,erfolg"},
     {n:"Kiefer (Sōng)",g:"🌲",b:"Langlebigkeit, Einsamkeit, ewige Stärke",t:"stärke,ausdauer,ewigkeit"},
   ],
-}
+// ===== WESTLICHER TIERKREIS =====
+  tierkreis_west:[
+    {n:"Widder ♈",g:"♈",b:"Mut, Pioniergeist, Durchsetzungsstärke — erstes Zeichen, Feuer",t:"stärke,mut,führung,energie"},
+    {n:"Stier ♉",g:"♉",b:"Beständigkeit, Sinnlichkeit, Genuss des Lebens — Erde, Venus",t:"stärke,sinnlichkeit,ausdauer,stabilität"},
+    {n:"Zwillinge ♊",g:"♊",b:"Wandlungsfähigkeit, Neugier, Kommunikation — Luft, Merkur",t:"transformation,weisheit,kreativität"},
+    {n:"Krebs ♋",g:"♋",b:"Fürsorge, Intuition, emotionale Tiefe — Wasser, Mond",t:"liebe,intuition,schutz,heimat"},
+    {n:"Löwe ♌",g:"♌",b:"Führung, Leidenschaft, königliche Würde — Feuer, Sonne",t:"stärke,führung,leidenschaft,mut"},
+    {n:"Jungfrau ♍",g:"♍",b:"Perfektion, Dienst, analytische Stärke — Erde, Merkur",t:"weisheit,ausdauer,heilung"},
+    {n:"Waage ♎",g:"♎",b:"Gleichgewicht, Harmonie, Schönheitssinn — Luft, Venus",t:"gleichgewicht,harmonie,schönheit,liebe"},
+    {n:"Skorpion ♏",g:"♏",b:"Transformation, Tiefe, Leidenschaft und Geheimnis — Wasser, Pluto",t:"transformation,sinnlichkeit,stärke,geheimnis"},
+    {n:"Schütze ♐",g:"♐",b:"Freiheit, Philosophie, Abenteuer — Feuer, Jupiter",t:"freiheit,weisheit,abenteuer,erfolg"},
+    {n:"Steinbock ♑",g:"♑",b:"Disziplin, Ehrgeiz, Ausdauer — Erde, Saturn",t:"ausdauer,erfolg,stärke,disziplin"},
+    {n:"Wassermann ♒",g:"♒",b:"Individualität, Revolution, Humanismus — Luft, Uranus",t:"freiheit,identität,transformation"},
+    {n:"Fische ♓",g:"♓",b:"Mitgefühl, Intuition, spirituelle Tiefe — Wasser, Neptun",t:"spirituell,liebe,intuition,transformation"},
+    {n:"Sonne ☉",g:"☉",b:"Das bewusste Selbst, Lebensenergie, Identität",t:"stärke,licht,identität,energie"},
+    {n:"Mond ☽",g:"☽",b:"Unbewusstes, Intuition, weibliche Kraft, Zyklen",t:"intuition,weiblichkeit,spirituell,zyklus"},
+    {n:"Aszendent",g:"⬆",b:"Die Maske die wir tragen — wie andere uns sehen",t:"identität,transformation"},
+  ],
 
+  // ===== CHINESISCHER TIERKREIS =====
+  tierkreis_china:[
+    {n:"Ratte 鼠",g:"🐀",b:"Klugheit, Anpassungsfähigkeit, Einfallsreichtum — erstes Tier",t:"weisheit,erfolg,anpassung"},
+    {n:"Ochse 牛",g:"🐂",b:"Fleiß, Zuverlässigkeit, Beharrlichkeit — stille Stärke",t:"stärke,ausdauer,stabilität"},
+    {n:"Tiger 虎",g:"🐅",b:"Mut, Energie, Unabhängigkeit — König des Waldes",t:"stärke,mut,führung,wildnis"},
+    {n:"Hase 兔",g:"🐇",b:"Glück, Eleganz, Sanftheit — Mondtier, Longevität",t:"glück,schönheit,frieden,intuition"},
+    {n:"Drache 龙",g:"龍",b:"Macht, Glück, göttlicher Schutz — einziges Fabeltier",t:"stärke,glück,schutz,macht"},
+    {n:"Schlange 蛇",g:"🐍",b:"Weisheit, Intuition, Anmut — tiefes Wissen",t:"weisheit,intuition,sinnlichkeit,transformation"},
+    {n:"Pferd 马",g:"🐎",b:"Freiheit, Ausdauer, Energie — ungezähmter Geist",t:"freiheit,stärke,energie,ausdauer"},
+    {n:"Ziege 羊",g:"🐑",b:"Kreativität, Sanftmut, Empathie — künstlerische Seele",t:"kreativität,liebe,schönheit,harmonie"},
+    {n:"Affe 猴",g:"🐒",b:"Intelligenz, Verspieltheit, Erfindungsreichtum",t:"weisheit,kreativität,freiheit"},
+    {n:"Hahn 鸡",g:"🐓",b:"Fleiß, Selbstbewusstsein, Ehrlichkeit — kündigt den Tag an",t:"mut,erfolg,identität"},
+    {n:"Hund 狗",g:"🐕",b:"Treue, Ehrlichkeit, Loyalität — treuester Begleiter",t:"treue,liebe,schutz"},
+    {n:"Schwein 猪",g:"🐖",b:"Glück, Großzügigkeit, Aufrichtigkeit — letztes Zeichen",t:"glück,liebe,erfolg"},
+  ],
+
+  // ===== STERNBILDER =====
+  sternbilder:[
+    {n:"Orion — Jäger",g:"⭐",b:"Stärke, Jagd, Mythos — der mächtigste Jäger des Himmels",t:"stärke,mut,führung"},
+    {n:"Großer Bär — Ursa Major",g:"🐻",b:"Orientierung, Beständigkeit, Mutterkraft",t:"schutz,stärke,heimat"},
+    {n:"Kleiner Bär — Polarstern",g:"✦",b:"Orientierung, Unerschütterlichkeit — immer da",t:"orientierung,stärke,ewigkeit"},
+    {n:"Kassiopeia",g:"✺",b:"Schönheit, Eitelkeit, Unsterblichkeit — zur Königin gemacht",t:"schönheit,identität,ewigkeit"},
+    {n:"Perseus",g:"⚔",b:"Heldenreise, Mut, Befreiung — tötete Medusa",t:"mut,stärke,transformation"},
+    {n:"Andromeda",g:"⛓",b:"Befreiung, Glaube, Schicksal wenden",t:"transformation,freiheit,liebe"},
+    {n:"Pegasus — Geflügeltes Pferd",g:"🐴",b:"Inspiration, Freiheit des Geistes, kreative Kraft",t:"freiheit,kreativität,transformation"},
+    {n:"Löwe — Leo",g:"🦁",b:"Kraft, Königlichkeit, Würde am Sommerhimmel",t:"stärke,führung,mut"},
+    {n:"Skorpion — Scorpius",g:"🦂",b:"Geheimnis, Stärke, Transformation",t:"stärke,transformation,geheimnis"},
+    {n:"Schwan — Cygnus",g:"🦢",b:"Anmut, Wandel, das Zwischen den Welten",t:"schönheit,transformation,spirituell"},
+    {n:"Adler — Aquila",g:"🦅",b:"Zeus Bote, Stärke, göttliche Verbindung",t:"stärke,freiheit,spirituell"},
+    {n:"Delphin — Delphinus",g:"🐬",b:"Rettung, Freude, Verbindung",t:"liebe,freiheit,freude"},
+    {n:"Drache — Draco",g:"🐉",b:"Hüter des Himmels, Ewigkeit, Schutz",t:"schutz,stärke,ewigkeit"},
+    {n:"Herkules",g:"💪",b:"Unüberwindliche Stärke, zwölf Aufgaben",t:"stärke,mut,ausdauer"},
+    {n:"Zwillinge — Gemini",g:"♊",b:"Dualität, Verbindung, Bruderschaft",t:"liebe,verbindung,transformation"},
+    {n:"Jungfrau — Virgo",g:"🌾",b:"Ernte, Schönheit, kosmische Ordnung",t:"harmonie,schönheit,weisheit"},
+    {n:"Fische — Pisces",g:"🐟",b:"Tiefe Weisheit, Mitgefühl, Übergang",t:"spirituell,intuition,liebe"},
+    {n:"Steinbock — Capricornus",g:"🐐",b:"Ziege-Fisch: Wildheit und Tiefe in einem",t:"stärke,ausdauer,transformation"},
+    {n:"Phönix",g:"🔥",b:"Wiedergeburt aus der Asche — südliches Sternbild",t:"transformation,neubeginn,stärke"},
+    {n:"Einhorn — Monoceros",g:"🦄",b:"Reinheit, Magie, das Unzähmbare",t:"reinheit,spirituell,schönheit"},
+  ],
+
+  // ===== NORDISCHE / GERMANISCHE TIERE =====
+  tiere_nordisch:[
+    {n:"Wolf (Fenrir)",g:"🐺",b:"Ungezähmte Kraft, Schicksal, Unaufhaltsamkeit — Odins Feind",t:"stärke,wildnis,transformation"},
+    {n:"Rabe Huginn",g:"🦅",b:"Huginn = Gedanke — Odins Gedächtnisrabe, Weisheit",t:"weisheit,geist,spirituell"},
+    {n:"Rabe Muninn",g:"🦅",b:"Muninn = Erinnerung — alles Vergangene, Gedächtnis",t:"weisheit,erinnerung,spirituell"},
+    {n:"Bär (Berserker)",g:"🐻",b:"Kriegergeist, Unbesiegbarkeit — Berserker trugen Bärenfelle",t:"stärke,mut,wildnis"},
+    {n:"Adler (Weltenauge)",g:"🦅",b:"Sitzt auf Yggdrasils Spitze — Weitblick, Überblick",t:"weisheit,freiheit,spirituell"},
+    {n:"Schlange Níðhöggr",g:"🐍",b:"Zernagt den Weltbaum — ewige Erneuerung durch Zerstörung",t:"transformation,ewigkeit,wildnis"},
+    {n:"Eichhörnchen Ratatoskr",g:"🐿",b:"Verbindet Adler und Schlange — Kommunikator zwischen den Welten",t:"verbindung,weisheit,transformation"},
+    {n:"Hirsch Eikþyrnir",g:"🦌",b:"Lebt auf Walhalls Dach — Quell aller Flüsse, Ursprung",t:"spirituell,neubeginn,natur"},
+    {n:"Ziegenbock Tanngrisnir",g:"🐐",b:"Thors Ziegenbock — wird getötet und täglich neu geboren",t:"neubeginn,stärke,transformation"},
+    {n:"Wölfe Geri & Freki",g:"🐺",b:"Odins Wölfe — gefräßiger Begleiter, Kriegsgeist",t:"stärke,führung,wildnis"},
+    {n:"Drache Fáfnir",g:"🐉",b:"Verwandelte sich aus Gier — Hüter des Schatzes, Warnung",t:"transformation,stärke,warnung"},
+    {n:"Katze Freyas",g:"🐈",b:"Zwei große Katzen ziehen Freyas Wagen — Weiblichkeit, Stärke",t:"stärke,weiblichkeit,sinnlichkeit"},
+  ],
+
+  // ===== ÄGYPTISCHE TIERE =====
+  tiere_aegypten:[
+    {n:"Katze (Bastet)",g:"🐈",b:"Göttin des Hauses — Schutz, Mutterschaft, weibliche Stärke",t:"schutz,weiblichkeit,sinnlichkeit"},
+    {n:"Falke (Horus)",g:"🦅",b:"Himmelsgott, Auge des Horus — Königtum, göttliche Führung",t:"stärke,führung,spirituell"},
+    {n:"Ibis (Thoth)",g:"🦤",b:"Gott der Schrift — Weisheit, Magie, Sprache",t:"weisheit,kreativität,spirituell"},
+    {n:"Krokodil (Sobek)",g:"🐊",b:"Nilgott — Macht, Fruchtbarkeit, Schutz",t:"stärke,schutz,macht"},
+    {n:"Kobra (Wadjet)",g:"🐍",b:"Schutzgöttin Unterägyptens — göttliche Wacht, Königsschutz",t:"schutz,stärke,macht"},
+    {n:"Skarabäus (Khepri)",g:"🪲",b:"Morgensonnen-Gott — Wiedergeburt, täglich neu",t:"neubeginn,transformation,spirituell"},
+    {n:"Schakal (Anubis)",g:"🐺",b:"Totenwächter — Übergang, Seelengeleiter, Schutz der Toten",t:"transformation,schutz,spirituell"},
+    {n:"Kuh (Hathor)",g:"🐄",b:"Göttin der Freude — Schönheit, Musik, Mutterschaft",t:"liebe,schönheit,weiblichkeit"},
+    {n:"Widder (Amun)",g:"🐏",b:"König der Götter — Verborgene Macht, Schöpfung",t:"stärke,macht,spirituell"},
+    {n:"Löwin (Sekhmet)",g:"🦁",b:"Kriegs- und Heilgöttin — Dualität, Feuer, Schutz",t:"stärke,heilung,weiblichkeit"},
+    {n:"Ibis-Mensch (Thot)",g:"𓅓",b:"Schreibergott — Hieroglyphen, Wissen, Magie",t:"weisheit,kreativität,spirituell"},
+    {n:"Bennu-Vogel",g:"🦢",b:"Heiliger Vogel von Heliopolis — Ursprung, Sonnenaufgang",t:"neubeginn,spirituell,licht"},
+    {n:"Sphinx",g:"🦁",b:"Hüterin der Geheimnisse — Weisheit und Stärke vereint",t:"weisheit,stärke,geheimnis"},
+  ],
+
+  // ===== NATIVE AMERICAN TIERE =====
+  tiere_nativ:[
+    {n:"Adler — Weißkopf",g:"🦅",b:"Verbindung zum Großen Geist — höchstes spirituelles Tier, Gebet",t:"spirituell,freiheit,führung"},
+    {n:"Wolf — Lehrmeister",g:"🐺",b:"Lehrer, Weggefährte, Intuition — führt das Rudel mit Weisheit",t:"weisheit,führung,intuition"},
+    {n:"Bär — Heiler",g:"🐻",b:"Medizin-Tier par excellence — Stärke und Heilkraft",t:"stärke,heilung,schutz"},
+    {n:"Büffel — Großes Geschenk",g:"🦬",b:"Alles kommt vom Büffel — Fülle, Dankbarkeit, Opfer",t:"erfolg,schutz,spirituell"},
+    {n:"Eule — Todesbotin",g:"🦉",b:"Wächter der Unterwelt, Weisheit — sieht was andere nicht sehen",t:"weisheit,transformation,spirituell"},
+    {n:"Rabe — Schöpfer",g:"🦅",b:"Trickster und Schöpfer — brachte das Licht in die Welt",t:"transformation,kreativität,spirituell"},
+    {n:"Falke — Botschafter",g:"🦅",b:"Himmelsbotschafter — Beobachter, Schnelligkeit, Fokus",t:"freiheit,weisheit,stärke"},
+    {n:"Schildkröte — Mutter Erde",g:"🐢",b:"Turtle Island — trägt die Welt, Ausdauer, Weisheit",t:"heimat,ausdauer,spirituell"},
+    {n:"Schlange — Heilerin",g:"🐍",b:"Häutung = Erneuerung — Heilung, Weisheit, Transformation",t:"heilung,transformation,weisheit"},
+    {n:"Kolibri — Freude",g:"🐦",b:"Bringt Liebe und Freude — kleinste, aber wundersamste Kraft",t:"liebe,freude,freiheit"},
+    {n:"Hirsch — Sensibler Führer",g:"🦌",b:"Sanftheit als Stärke — führt durch Empfindsamkeit",t:"führung,liebe,spirituell"},
+    {n:"Puma — Weibliche Kraft",g:"🦁",b:"Führerschaft, schnelle Entscheidungen — stille Macht",t:"stärke,führung,weiblichkeit"},
+    {n:"Waschbär — Trickster",g:"🦝",b:"Meister der Verkleidung — Anpassung, List, Dualität",t:"transformation,weisheit,kreativität"},
+    {n:"Elch — Selbstbewusstsein",g:"🫎",b:"Ausdauer und Stärke — hält pace über lange Zeit",t:"stärke,ausdauer,identität"},
+    {n:"Truthahn — Geschenk",g:"🦃",b:"Heiliges Tier — Fülle, Dankbarkeit, Gabe des Lebens",t:"erfolg,spirituell,liebe"},
+  ],
+
+  // ===== JAPANISCHE TIERE =====
+  tiere_japan:[
+    {n:"Kitsune — Fuchs",g:"🦊",b:"Vielschichtige Magie — je mehr Schwänze, desto weiser und mächtiger",t:"weisheit,transformation,sinnlichkeit"},
+    {n:"Tanuki — Marderhund",g:"🦝",b:"Gestaltenwandler, Glück, Freude — charmanter Trickster",t:"glück,kreativität,transformation"},
+    {n:"Kirin — Einhorn",g:"🦒",b:"Chinesisch-japanisches Fabelwesen — Gerechtigkeit, Reinheit, seltenes Glück",t:"reinheit,glück,spirituell"},
+    {n:"Tengu — Berggeist",g:"🦅",b:"Halbmensch-Halbvogel — Krieger, Wächter der Wälder",t:"stärke,weisheit,schutz"},
+    {n:"Ryu — Drache",g:"龍",b:"Wassergott — bringt Regen und Glück, göttlicher Schutz",t:"schutz,glück,macht"},
+    {n:"Koi — Tapferkeit",g:"🐟",b:"Schwimmt gegen den Strom und wird zum Drachen — Transformation",t:"mut,ausdauer,transformation"},
+    {n:"Tsuru — Kranich",g:"🦢",b:"1000 Origami-Kraniche erfüllen Wünsche — Langlebigkeit, Glück",t:"glück,heilung,ewigkeit"},
+    {n:"Schildkröte — Minogame",g:"🐢",b:"10.000 Jahre Langlebigkeit — Weisheit, Stabilität",t:"ausdauer,weisheit,ewigkeit"},
+    {n:"Tora — Tiger",g:"🐅",b:"Beschützer vor bösen Geistern — Norden, Mut, Stärke",t:"schutz,stärke,mut"},
+    {n:"Usagi — Hase",g:"🐇",b:"Mondtier — stampft den Reiskuchen, Glück und Erneuerung",t:"glück,neubeginn,liebe"},
+    {n:"Hebi — Schlange",g:"🐍",b:"Schutzgottheit des Hauses — nicht erschrecken, Glück bringt",t:"schutz,glück,weisheit"},
+    {n:"Kumo — Spinne",g:"🕷",b:"Alte Frauen als Spinnen verkleidet — Schöpferin, Netz des Lebens",t:"transformation,weisheit,kreativität"},
+  ],
+
+  // ===== KELTISCHE TIERE =====
+  tiere_keltisch:[
+    {n:"Hirsch — Cernunnos",g:"🦌",b:"König des Waldes — Seelenführer, Übergang zwischen Welten",t:"führung,spirituell,transformation"},
+    {n:"Hase — Mondgöttin",g:"🐇",b:"Heiliger Mondtier, Fruchtbarkeit — Mond und Wiedergeburt",t:"spirituell,neubeginn,weiblichkeit"},
+    {n:"Rabe — Morrigan",g:"🦅",b:"Kriegsgöttin Morrigan als Rabe — Prophetie, Übergang, Stärke",t:"stärke,transformation,weisheit"},
+    {n:"Lachs — Hazel-Weisheit",g:"🐟",b:"Aß die Haselnüsse der Weisheit — allwissendes Tier",t:"weisheit,spirituell,transformation"},
+    {n:"Schlange — Erneuerung",g:"🐍",b:"Häutet sich — ewig jung, Heilung, Übergang",t:"transformation,heilung,neubeginn"},
+    {n:"Adler — Rhiannon",g:"🦅",b:"Botschafter der Götter — himmlische Verbindung, Weitsicht",t:"freiheit,spirituell,weisheit"},
+    {n:"Wildschwein — Krieger",g:"🐗",b:"Stärkstes Tier im keltischen Denken — Kampfgeist, Tapferkeit",t:"stärke,mut,wildnis"},
+    {n:"Kuh — Heilige",g:"🐄",b:"Gibt Leben durch Milch — Fülle, Mutterkraft, Fürsorge",t:"liebe,schutz,weiblichkeit"},
+    {n:"Schwan — Seele",g:"🦢",b:"Seelen nehmen Schwanenform an — Reinheit, Liebe, Übergang",t:"spirituell,liebe,transformation"},
+    {n:"Hund — Treuer Begleiter",g:"🐕",b:"Heilungshund, Begleiter ins Jenseits — Treue, Schutz",t:"treue,schutz,heilung"},
+    {n:"Wolf — Rudel",g:"🐺",b:"Clan-Symbol, Krieger — Schutz des Stammes, Gemeinschaft",t:"stärke,schutz,heimat"},
+    {n:"Pferd — Epona",g:"🐎",b:"Göttin Epona reitet Pferd — Reise, Freiheit, Übergang",t:"freiheit,spirituell,transformation"},
+  ],
+
+  // ===== HINDUISTISCHE TIERE =====
+  tiere_hinduistisch:[
+    {n:"Elefant (Ganesha)",g:"🐘",b:"Überwinder von Hindernissen — Weisheit, Glück, neuer Anfang",t:"weisheit,glück,neubeginn,schutz"},
+    {n:"Kuh — Heilig",g:"🐄",b:"Mutter allen Lebens — Fürsorge, Heiligkeit, Fülle",t:"liebe,heilung,spirituell"},
+    {n:"Affe (Hanuman)",g:"🐒",b:"Gott Hanuman — Loyalität, unglaubliche Stärke, Hingabe",t:"stärke,liebe,mut"},
+    {n:"Kobra (Naga)",g:"🐍",b:"Schivas Halsschmuck — Schutz, Weisheit, kosmische Energie",t:"schutz,weisheit,spirituell"},
+    {n:"Pfau (Saraswati)",g:"🦚",b:"Göttin der Kunst trägt Pfauenfeder — Schönheit, Weisheit, Kunst",t:"schönheit,weisheit,kreativität"},
+    {n:"Tiger (Durga)",g:"🐅",b:"Göttin Durga reitet Tiger — weibliche Kriegerin, unbesiegbare Kraft",t:"stärke,weiblichkeit,mut"},
+    {n:"Ratte (Mushika)",g:"🐀",b:"Ganeshas Reittier — Bescheidenheit, Intelligenz, überwindet alles",t:"weisheit,erfolg,transformation"},
+    {n:"Garuda — Adlerwesen",g:"🦅",b:"Vishnus Reittier — übernatürliche Stärke, Feind der Schlangen",t:"stärke,spirituell,freiheit"},
+    {n:"Löwe (Narasimha)",g:"🦁",b:"Mensch-Löwe Avatar Vishnus — Schutz der Gläubigen",t:"schutz,stärke,spirituell"},
+    {n:"Schildkröte (Kurma)",g:"🐢",b:"Vishnus zweiter Avatar — trägt die Welt, Stabilität",t:"ausdauer,spirituell,stabilität"},
+    {n:"Hamsa — Schwan/Gans",g:"🦢",b:"Brahmas Reittier — spirituelle Reinheit, Seele, Transzendenz",t:"spirituell,reinheit,weisheit"},
+  ],
+
+  // ===== BUDDHISTISCHER TIERKREIS (12 Tier-Schutzgötter) =====
+  tiere_buddhist:[
+    {n:"Elefant — Bodhi",g:"🐘",b:"Weiß-Elefant Traum der Maya — Geburt Buddhas, Weisheit, Kraft",t:"weisheit,spirituell,stärke"},
+    {n:"Löwe — Dharma",g:"🦁",b:"Buddha sitzt auf Löwenthron — Mut, Schutz des Dharma",t:"stärke,schutz,spirituell"},
+    {n:"Pferd — Befreiung",g:"🐎",b:"Kanthaka trug Buddha in die Welt — Reise zur Erleuchtung",t:"freiheit,spirituell,transformation"},
+    {n:"Ochse — Erleuchtung",g:"🐂",b:"Zen: Ochse und Reiter — Suche nach dem wahren Selbst",t:"weisheit,spirituell,ausdauer"},
+    {n:"Schlange (Naga)",g:"🐍",b:"Schützte Buddha während Meditation — göttlicher Schutz, Weisheit",t:"schutz,weisheit,spirituell"},
+    {n:"Pfau — Dharma",g:"🦚",b:"Transformiert Gift in Schönheit — Weisheit aus Leiden",t:"transformation,weisheit,schönheit"},
+    {n:"Fisch (Goldfish)",g:"🐟",b:"Schwimmt frei im Meer — Freiheit, Glück, Überfluss",t:"freiheit,glück,spirituell"},
+    {n:"Krabbe — Karma",g:"🦀",b:"Seitwärtsbewegung — Karma-Weg, unerwartete Wege",t:"transformation,spirituell,weisheit"},
+    {n:"Hasen im Mond",g:"🐇",b:"Mondhasen mahlen die Unsterblichkeitspille — Opferbereitschaft",t:"spirituell,liebe,neubeginn"},
+    {n:"Makara — Meerestier",g:"🐉",b:"Halbdrache-Halbfisch — Schwelle zwischen Welten, Übergang",t:"transformation,spirituell,schutz"},
+    {n:"Suparna-Vogel",g:"🦅",b:"Riesiger heiliger Vogel — Freiheit, göttliche Kraft",t:"freiheit,spirituell,stärke"},
+    {n:"Reh — Erstes",g:"🦌",b:"Rehe hörten Buddhas erste Predigt — Sanftmut, erste Wahrheit",t:"spirituell,frieden,weisheit"},
+  ],
+
+  // ===== AZTEKISCHE TIERE =====
+  tiere_azteken:[
+    {n:"Jaguar — Krieger",g:"🐆",b:"Untergang-Sonne, nächtliche Kraft — Schamane, Krieger-Kaste",t:"stärke,mut,wildnis"},
+    {n:"Adler — Krieger",g:"🦅",b:"Tagsonne, höchster Krieger — Adler-Krieger-Orden",t:"stärke,mut,führung"},
+    {n:"Quetzal — Freiheit",g:"🦜",b:"Heiliger Vogel — Freiheit, Schönheit, stirbt in Gefangenschaft",t:"freiheit,schönheit,spirituell"},
+    {n:"Kolibri — Huitzilopochtli",g:"🐦",b:"Kriegsgott als Kolibri wiedergeboren — Krieger, Energie",t:"stärke,transformation,spirituell"},
+    {n:"Schlange — Quetzalcoatl",g:"🐍",b:"Gefiederte Schlange — Weisheit, Wind, Schöpfung",t:"weisheit,transformation,spirituell"},
+    {n:"Hund — Totenbegleiter",g:"🐕",b:"Xoloitzcuintli begleitet durch die Unterwelt — Treue bis zum Ende",t:"treue,transformation,schutz"},
+    {n:"Fledermaus — Unterwelt",g:"🦇",b:"Gott der Höhlen und Nacht — Übergang, Wiedergeburt",t:"transformation,spirituell,neubeginn"},
+    {n:"Kröte — Tlaltecuhtli",g:"🐸",b:"Erdgöttin — Erde selbst, Fruchtbarkeit, Tod und Leben",t:"spirituell,neubeginn,stärke"},
+    {n:"Adler-Kaktus-Schlange",g:"🦅",b:"Symbol Mexikos — Tenochtitlan, Schicksal, Macht",t:"identität,macht,spirituell"},
+    {n:"Xolotl — Nackter Hund",g:"🐕",b:"Begleiter der Toten — führt durch die Unterwelt sicher",t:"schutz,transformation,treue"},
+  ],
+
+  // ===== SLAWISCHE TIERE =====
+  tiere_slawisch:[
+    {n:"Zhar-Ptitsa — Feuervogel",g:"🔥",b:"Magischer Feuer-Vogel — Glück das man kaum fangen kann",t:"glück,transformation,spirituell"},
+    {n:"Bär — Veles",g:"🐻",b:"Totengott Veles als Bär — Unterwelt, Stärke, alter Glaube",t:"stärke,spirituell,transformation"},
+    {n:"Wolf — Perun",g:"🐺",b:"Gegner von Veles — Donnergott, Krieger, Schutz",t:"stärke,schutz,mut"},
+    {n:"Schlange — Zmey",g:"🐍",b:"Drachen-Schlange — Weisheit und Bedrohung, Dualität",t:"stärke,weisheit,transformation"},
+    {n:"Falke — Sokol",g:"🦅",b:"Reinheit, Freiheit, Liebe — Symbol vieler slawischer Völker",t:"freiheit,liebe,stärke"},
+    {n:"Kuckuck — Schicksal",g:"🐦",b:"Zählt Lebensjahre — Schicksal, Prophezeiung, Zeit",t:"weisheit,transformation,spirituell"},
+    {n:"Nachtigall — Solovey",g:"🐦",b:"Gefangener Zaubervogel — Musik, Magie, verborgene Kraft",t:"kreativität,transformation,spirituell"},
+    {n:"Fuchs — Lisitsa",g:"🦊",b:"Schlau und listig — weibliche Magie, Cleverness",t:"weisheit,sinnlichkeit,transformation"},
+  ]
+}
 function getAllSymbols(){return Object.values(SYMBOLE).flat();}
 
 // ======== STATE ========
@@ -833,7 +1031,7 @@ const TRADS=[
   {k:'japanisch',e:'⛩',t:'Japanisch',d:'Enso, Koi, Torii, Drache'},
   {k:'spirituell',e:'☯',t:'Spirituell / Universal',d:'Om, Lotus, Unalome, Mandala'},
   {k:'amazigh',e:'ⵣ',t:'Amazigh / Berber',d:'Yaz, Tifinagh, Berbersymbole'},
-  {k:'astrologie',e:'✨',t:'Astrologie',d:'Sternzeichen, Planeten'},
+  {k:'astrologie',e:'✨',t:'Astrologie — Planeten',d:'Sonne, Mond, Venus, Mars & mehr'},
   {k:'alchemie',e:'🔥',t:'Alchemie',d:'Feuer, Wasser, Erde, Luft'},
   {k:'tribal',e:'🌊',t:'Tribal / Polynesisch',d:'Maori, Koru, Haida'},
   {k:'griechisch',e:'🏛️',t:'Griechisch / Römisch',d:'Meander, Phi, Caduceus'},
@@ -841,8 +1039,20 @@ const TRADS=[
   {k:'hinduistisch',e:'🕉',t:'Hinduistisch',d:'Ganesha, Trishula, Chakras'},
   {k:'slawisch',e:'⭐',t:'Slawisch',d:'Kolowrat, Perun, Rod'},
   {k:'voodoo',e:'🌺',t:'Voodoo / Adinkra',d:'Vévés, Sankofa, Gye Nyame'},
-  {k:'nativeamerican',e:'🪶',t:'Native American',d:'Traumfänger, Thunderbird, Medizinrad'},
+  {k:'nativeamerican',e:'🪶',t:'Native American',d:'Traumfänger, Thunderbird'},
   {k:'chinesisch',e:'🐉',t:'Chinesisch',d:'Bagua, Drache, Phönix'},
+  {k:'tierkreis_west',e:'♈',t:'Westlicher Tierkreis',d:'Aries bis Pisces — 12 Sternzeichen'},
+  {k:'tierkreis_china',e:'🐀',t:'Chinesischer Tierkreis',d:'Ratte, Ochse, Tiger … alle 12 Tiere'},
+  {k:'sternbilder',e:'🌌',t:'Sternbilder',d:'Orion, Großer Bär, Kassiopeia & mehr'},
+  {k:'tiere_nordisch',e:'🐺',t:'Nordische Tiere',d:'Fenrir, Huginn, Muninn, Berserker-Bär'},
+  {k:'tiere_aegypten',e:'🐈',t:'Ägyptische Tiere',d:'Bastet, Horus, Anubis, Sobek'},
+  {k:'tiere_nativ',e:'🦬',t:'Native American Tiere',d:'Adler, Wolf, Bär, Büffel, Rabe'},
+  {k:'tiere_japan',e:'🦊',t:'Japanische Tiere',d:'Kitsune, Tanuki, Kirin, Tengu'},
+  {k:'tiere_keltisch',e:'🦌',t:'Keltische Tiere',d:'Hirsch, Hase, Wildschwein, Schwan'},
+  {k:'tiere_hinduistisch',e:'🐘',t:'Hinduistische Tiere',d:'Ganesha, Garuda, Naga, Hamsa'},
+  {k:'tiere_buddhist',e:'🕊',t:'Buddhistische Tiere',d:'Elefant, Löwe, Pfau, Naga, Reh'},
+  {k:'tiere_azteken',e:'🐆',t:'Aztekische Tiere',d:'Jaguar, Adler, Quetzal, Kolibri'},
+  {k:'tiere_slawisch',e:'🔥',t:'Slawische Tiere',d:'Feuervogel, Zmey, Falke, Nachtigall'},
 ];
 
 const MEANS=[
@@ -858,6 +1068,11 @@ const MEANS=[
   {k:'ewigkeit',e:'∞',t:'Ewigkeit & Zeitlosigkeit'},
   {k:'erfolg',e:'🏆',t:'Erfolg & Ziele'},
   {k:'heilung',e:'💚',t:'Heilung & Gesundheit'},
+  {k:'sinnlichkeit',e:'🌹',t:'Sinnlichkeit & Leidenschaft'},
+  {k:'wildnis',e:'🐺',t:'Wildnis & Ungezähmtheit'},
+  {k:'führung',e:'👑',t:'Führung & Macht'},
+  {k:'intuition',e:'🌙',t:'Intuition & Geheimnis'},
+  {k:'glück',e:'🍀',t:'Glück & Fülle'},
 ];
 
 function showTradition(skip,back){
