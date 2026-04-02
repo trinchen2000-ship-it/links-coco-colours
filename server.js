@@ -96,17 +96,16 @@ app.post('/track', async (req, res) => {
     const { event_type, event_data = {}, session_id, referrer } = req.body;
     const ua = req.headers['user-agent'] || '';
     const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
-    const geo = await getGeo(ip);
+    const geo = await getGeo(ip); // IP nur für Geo, dann verwerfen
 
     await pool.query(
       `INSERT INTO events
-        (session_id, event_type, event_data, ip_address, city, country, country_code, region, device, browser, referrer, user_agent)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+        (session_id, event_type, event_data, city, country, country_code, region, device, browser, referrer, user_agent)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
         session_id || null,
         event_type || 'unknown',
         JSON.stringify(event_data),
-        ip || null,
         geo.city,
         geo.country,
         geo.country_code,
