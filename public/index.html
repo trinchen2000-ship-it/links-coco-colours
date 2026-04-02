@@ -1029,7 +1029,21 @@ const GDB={
   hals:{schrift:'4–14 cm',symbol:'3–10 cm',portrait:'⚠️ Braucht Erfahrung',tier:'5–14 cm',blume:'4–12 cm',geometrie:'4–12 cm',sleeve:'Übergang',freehand:'5–14 cm'},
   finger:{schrift:'1–5 cm',symbol:'1–3 cm',portrait:'⚠️ Nicht möglich',tier:'1–3 cm',blume:'1–4 cm',geometrie:'1–4 cm',sleeve:'—',freehand:'2–5 cm'},
 };
-const GN={hals:'Statement-Tattoo — sichtbar, mutig.',schulter:'Gut für runde Motive die der Körperform folgen.',brust:'Große Fläche, sehr wirkungsvoll.',bauch:'Unterschätzte Fläche, gute Heilung.',rippen:'Schmerzhaft aber ikonisch — heilt gut.',oberarm:'Klassiker für Sleeves.',unterarm:'Gut heilend, viel Platz.',handgelenk:'Schmale Fläche — simpel halten.',ruecken:'Die große Leinwand.',oberschenkel:'Unterschätzte Stelle — gute Heilung.',wade:'Klassisch und gut sichtbar.',fuss:'Verblasst schneller — regelmäßig auffrischen.',finger:'Verblasst sehr schnell — oft nachstechen nötig.'};
+const GN={
+  hals:'⚡ Schmerz: mittel–hoch (Stufe 3) · Hohe Nozizeptordichte, dünne Haut. Kunden vorab auf erhöhte Empfindlichkeit hinweisen.',
+  schulter:'⚡ Schmerz: gering (Stufe 1–2) · Gute Hautdicke, wenig Knochen direkt darunter. Ideal für erste größere Projekte.',
+  brust:'⚡ Schmerz: mittel (Stufe 2–3 ♂ / 3 ♀) · Variable Hautdicke, Nähe zu Rippen. Auf Symmetrie beim Stencil achten.',
+  bauch:'⚡ Schmerz: mittel (Stufe 3) · Erhöhte Nozizeptordichte. Haut kann sich bei Gewichtsveränderungen verschieben — Kunden informieren.',
+  rippen:'⚡ Schmerz: sehr hoch (Stufe 4–5 ♀ / 4 ♂) · Sehr dünne Haut direkt auf Knochen. Maschinenerschütterung überträgt sich stark. Viele Pausen einplanen.',
+  oberarm:'⚡ Schmerz: gering (Stufe 1) · Beste Körperstelle für Einsteiger. Gute Dermisdicke, keine kritischen Nerven. Runde Motive können durch Armspannung stauchen.',
+  unterarm:'⚡ Schmerz: mittel (Stufe 3) · Unterarminnenseite: dünnere Haut + mehr Nerven = empfindlicher. Außenseite gut heilend, klassisch.',
+  handgelenk:'⚡ Schmerz: hoch (Stufe 3–4) · Dünnste Haut am ganzen Arm (~0,76 mm), Sehnen sichtbar. Gelenknähe = erhöhte Nervendichte. Verblasst schneller durch Bewegung.',
+  ruecken:'⚡ Schmerz: mittel (Stufe 2–3) · Dicke Dermis = gut. Nähe zur Wirbelsäule = empfindlicher. Skoliose und Haltung beim Stencil prüfen.',
+  oberschenkel:'⚡ Schmerz: gering–mittel (Stufe 1–2 außen / 3–4 innen ♀) · Außen: ideale Fläche, gute Heilung. Innen: erhöhte Nozizeptordichte, empfindlicher.',
+  wade:'⚡ Schmerz: mittel (Stufe 2–3) · Schienbeinkante direkt darunter: Erschütterung überträgt sich auf Knochen. Innenseite empfindlicher.',
+  fuss:'⚡ Schmerz: hoch (Stufe 4–5) · Direkt auf Knochen, kaum Fettpolster. Verblasst am schnellsten durch ständige Reibung. Regelmäßiges Auffrischen nötig.',
+  finger:'⚡ Schmerz: sehr hoch (Stufe 5) · Knochen direkt unter Haut, extrem dünne Dermis. Verblasst sehr schnell. Kunden über häufiges Nachstechen aufklären.',
+};
 function berechne(){
   if(!selZone||!selMotivKey){alert('Bitte Körperstelle und Motiv-Typ wählen.');return;}
   const size=(GDB[selZone]||{})[selMotivKey]||'–';
