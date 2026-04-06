@@ -478,6 +478,9 @@ ${card('', `
 app.get('/berater', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'berater.html'));
 });
+app.get('/suche', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'suche.html'));
+});
 
 // ========== HEALTH ==========
 app.get('/health', (req, res) => res.json({ ok: true, service: 'links.coco-colours.de' }));
