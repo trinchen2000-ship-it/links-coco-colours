@@ -183,7 +183,7 @@ footer{text-align:center;padding-top:28px}.footer-text{font-size:9px;color:#333;
     <div style="padding:0 18px 10px;flex-shrink:0">
       <div style="display:flex;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:9px 13px">
         <input id="bQ" type="text" placeholder="Suchen · z.B. Selbstliebe, Wolf, Lotus …" style="flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'Poppins',sans-serif;font-size:14px">
-        <button onclick="window.bGo()" style="background:var(--gold);border:none;color:#0a0a0a;font-size:12px;font-weight:700;padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'Poppins',sans-serif">Suchen</button>
+        <button onclick="bGo()" style="background:var(--gold);border:none;color:#0a0a0a;font-size:12px;font-weight:700;padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'Poppins',sans-serif">Suchen</button>
       </div>
     </div>
     <div id="bR" style="display:none;overflow-y:auto;max-height:250px;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0"></div>
@@ -334,7 +334,7 @@ footer{text-align:center;padding-top:28px}.footer-text{font-size:9px;color:#333;
 
 <script>
 // ======== SYMBOL DB (270+ Symbole, 15 Traditionen) ========
-const SYMBOLE={
+var SYMBOLE={
 nordisch:[
     {n:"Fehu",g:"ᚠ",b:"Wohlstand, Fülle, Neubeginn — erste Rune des Futharks",t:"freiheit,erfolg,neubeginn"},
     {n:"Uruz",g:"ᚢ",b:"Wilde Kraft, Stärke, Gesundheit — die Auerochsen-Rune",t:"stärke,kraft,gesundheit"},
@@ -920,7 +920,7 @@ function showWelcome(skip,back){
 }
 
 // ======== STIL FINDER ========
-const SQ=[
+var SQ=[
   {q:'Wie beschreibst du deinen Stil?',opts:[
     {e:'🖤',t:'Minimalistisch & clean',d:'Weniger ist mehr.'},
     {e:'⚡',t:'Edgy & underground',d:'Dunkel, kantig.'},
@@ -1031,7 +1031,7 @@ function showStilResult(symData){
 }
 
 // ======== SYMBOL GUIDE ========
-const TRADS=[
+var TRADS=[
   {k:'nordisch',e:'⚡',t:'Nordisch / Runen',d:'Futhark, Vegvísir, Valknut'},
   {k:'keltisch',e:'🍀',t:'Keltisch',d:'Knoten, Triquetra, Triskelion'},
   {k:'aegyptisch',e:'𓂀',t:'Ägyptisch',d:'Ankh, Horus, Skarabäus'},
@@ -1062,7 +1062,7 @@ const TRADS=[
   {k:'tiere_slawisch',e:'🔥',t:'Slawische Tiere',d:'Feuervogel, Zmey, Falke, Nachtigall'},
 ];
 
-const MEANS=[
+var MEANS=[
   {k:'freiheit',e:'🕊',t:'Freiheit & Unabhängigkeit'},
   {k:'stärke',e:'💪',t:'Stärke & Mut'},
   {k:'transformation',e:'🦋',t:'Transformation & Wandel'},
@@ -1469,49 +1469,6 @@ function addMythos(q,a,type){
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup();});
-
-// ===== BERATER SUCHE =====
-window.bGo = function() {
-  var q = (document.getElementById('bQ').value || '').trim();
-  var el = document.getElementById('bR');
-  if (!q) { el.style.display='none'; el.innerHTML=''; return; }
-  var ql = q.toLowerCase(), ws = ql.split(/\s+/), h = '';
-  var fM = MEANS.filter(function(m) {
-    return ws.some(function(w) { return m.k.indexOf(w)>=0 || m.t.toLowerCase().indexOf(w)>=0; });
-  });
-  var fS = []; 
-  Object.values(SYMBOLE).forEach(function(arr) {
-    arr.forEach(function(s) {
-      if (fS.length<12 && ws.some(function(w) {
-        return s.n.toLowerCase().indexOf(w)>=0 || (s.b&&s.b.toLowerCase().indexOf(w)>=0) || (s.t&&s.t.some(function(t){return t.indexOf(w)>=0;}));
-      })) fS.push(s);
-    });
-  });
-  if (fM.length) {
-    h += '<div style="padding:10px 18px 6px"><div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Bedeutung & Symbolik</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
-    fM.forEach(function(m) {
-      h += '<span onclick="document.getElementById(\'bR\').style.display=\'none\';ST.meaning=[\''+m.k+'\'];showSymbolResult()" style="padding:5px 12px;border:1px solid var(--gold);border-radius:20px;font-size:12px;cursor:pointer;background:var(--gold-dim);color:var(--gold)">'+m.e+' '+m.t+'</span>';
-    });
-    h += '</div></div>';
-  }
-  if (fS.length) {
-    if(h) h += '<div style="height:1px;background:var(--border);margin:0 18px"></div>';
-    h += '<div style="padding:10px 18px 6px"><div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Passende Symbole</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
-    fS.forEach(function(s) {
-      h += '<span style="padding:5px 12px;border:1px solid var(--border2);border-radius:20px;font-size:12px;background:var(--card2);color:var(--white)">'+(s.e||'◆')+' '+s.n+'</span>';
-    });
-    h += '</div></div>';
-  }
-  if (!h) h = '<div style="padding:14px 18px;font-size:13px;color:var(--muted)">Keine Treffer — anderen Begriff probieren</div>';
-  el.innerHTML = h;
-  el.style.display = 'block';
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-  showWelcome();
-  var inp = document.getElementById('bQ');
-  if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') window.bGo(); });
-});
 </script>
 
 <script>
@@ -1635,5 +1592,51 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+<script>
+function bGo() {
+  var q = (document.getElementById('bQ').value || '').trim();
+  var el = document.getElementById('bR');
+  if (!q) { el.style.display='none'; el.innerHTML=''; return; }
+  var ql = q.toLowerCase(), ws = ql.split(/\s+/), h = '';
+  var fM = MEANS.filter(function(m) {
+    return ws.some(function(w) { return m.k.indexOf(w)>=0 || m.t.toLowerCase().indexOf(w)>=0; });
+  });
+  var fS = [];
+  Object.values(SYMBOLE).forEach(function(arr) {
+    arr.forEach(function(s) {
+      if (fS.length<12 && ws.some(function(w) {
+        return s.n.toLowerCase().indexOf(w)>=0 ||
+          (s.b && s.b.toLowerCase().indexOf(w)>=0) ||
+          (s.t && s.t.some(function(t){ return t.indexOf(w)>=0; }));
+      })) fS.push(s);
+    });
+  });
+  if (fM.length) {
+    h += '<div style="padding:10px 18px 6px"><div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Bedeutung & Symbolik</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+    fM.forEach(function(m) {
+      h += '<span onclick="el=document.getElementById(\'bR\');el.style.display=\'none\';ST.meaning=[\''+m.k+'\'];showSymbolResult()" style="padding:5px 12px;border:1px solid var(--gold);border-radius:20px;font-size:12px;cursor:pointer;background:var(--gold-dim);color:var(--gold)">'+m.e+' '+m.t+'</span>';
+    });
+    h += '</div></div>';
+  }
+  if (fS.length) {
+    if(h) h += '<div style="height:1px;background:var(--border);margin:0 18px"></div>';
+    h += '<div style="padding:10px 18px 6px"><div style="font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Passende Symbole</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+    fS.forEach(function(s) {
+      h += '<span style="padding:5px 12px;border:1px solid var(--border2);border-radius:20px;font-size:12px;background:var(--card2);color:var(--white)">'+(s.e||'◆')+' '+s.n+'</span>';
+    });
+    h += '</div></div>';
+  }
+  if (!h) h = '<div style="padding:14px 18px;font-size:13px;color:var(--muted)">Keine Treffer</div>';
+  el.innerHTML = h;
+  el.style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  showWelcome();
+  document.getElementById('bQ').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') bGo();
+  });
+});
+</script>
 </body>
 </html>
