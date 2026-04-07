@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Symbol-Suche · Coco Colours</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c9a84c;--gold-dim:rgba(201,168,76,.12);--card:#161616;--card2:#1c1c1c;--border:#272727;--border2:#333;--muted:#666;--white:#f0ede8}
+body{background:#0a0a0a;color:var(--white);font-family:'Poppins',sans-serif;padding-bottom:60px}
+
+/* TOPBAR */
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#0d0d0d;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.top-title{font-size:13px;font-weight:600;letter-spacing:2px;color:var(--gold)}
+.top-back{padding:6px 12px;border:1px solid var(--border);border-radius:7px;font-size:11px;color:var(--muted);text-decoration:none}
+
+/* SUCHFELD */
+.sfeld{display:flex;gap:8px;margin:16px 18px 0;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 16px}
+.sfeld:focus-within{border-color:var(--gold)}
+#q{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'Poppins',sans-serif;font-size:16px}
+#q::placeholder{color:var(--muted)}
+#sbtn{background:var(--gold);border:none;color:#0a0a0a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;flex-shrink:0}
+
+/* ERGEBNISSE */
+#res{padding:20px 18px 0}
+.hint{color:var(--muted);font-size:13px;line-height:1.9}
+.hint b{color:var(--white)}
+.sek{margin-bottom:24px}
+.sek-titel{font-size:9px;letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.leer{color:var(--muted);font-size:14px;padding:20px 0}
+
+/* KARTEN — groß, mit Symbol links */
+.karte{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid var(--border2);border-radius:14px;background:var(--card);color:var(--white);text-decoration:none;margin-bottom:10px;transition:border-color .15s}
+.karte:hover{border-color:var(--gold)}
+.karte.gold-karte{border-color:var(--gold);background:var(--gold-dim)}
+.sym-box{width:58px;height:58px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--card2);border:1px solid var(--border);border-radius:12px;font-size:30px;font-family:serif;line-height:1}
+.karte-info{flex:1;min-width:0}
+.karte-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.karte-name.gold{color:var(--gold)}
+.karte-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.google-btn{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:5px 11px;white-space:nowrap;flex-shrink:0;text-decoration:none;display:block;transition:all .15s}
+.google-btn:hover{border-color:var(--gold);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span class="top-title">🔍 SYMBOL-SUCHE</span>
+  <a href="/berater" class="top-back">← Zum Berater</a>
+</div>
+
+<div class="sfeld">
+  <input id="q" type="text"
+    placeholder="z.B. Selbstliebe, Wolf, Chakra, Unalome, Rabe …"
+    autocomplete="off"
+    oninput="suchen(this.value)"
+    onkeydown="if(event.key==='Enter')suchen(this.value)">
+  <button id="sbtn" onclick="suchen(document.getElementById('q').value)">Suchen</button>
+</div>
+
+<div id="res">
+  <div class="hint">Tippe einen Begriff — Ergebnisse erscheinen sofort.<br><br>
+  <b>Beispiele:</b> Selbstliebe · Wolf · Rabe · Chakra · Unalome · Pentagramm · Koi · Vergänglichkeit · Treue</div>
+</div>
+
+<script>
+
+
+const SYMBOLE={
+nordisch:[
+    {n:"Fehu",g:"ᚠ",b:"Wohlstand, Fülle, Neubeginn — erste Rune des Futharks",t:"freiheit,erfolg,neubeginn"},
+    {n:"Uruz",g:"ᚢ",b:"Wilde Kraft, Stärke, Gesundheit — die Auerochsen-Rune",t:"stärke,kraft,gesundheit"},
+    {n:"Thurisaz",g:"ᚦ",b:"Schutz, Abwehr, Grenzen setzen — der Donnerkeil",t:"schutz,kraft,verteidigung"},
+    {n:"Ansuz",g:"ᚨ",b:"Weisheit, Kommunikation, göttliche Botschaft",t:"weisheit,geist,spirituell"},
+    {n:"Raidho",g:"ᚱ",b:"Reise, Bewegung, der eigene Lebensweg",t:"freiheit,reise,neubeginn"},
+    {n:"Kenaz",g:"ᚲ",b:"Erleuchtung, Kreativität, inneres Feuer",t:"transformation,licht,kreativität"},
+    {n:"Gebo",g:"ᚷ",b:"Partnerschaft, Austausch, das Geschenk der Verbindung",t:"liebe,verbindung"},
+    {n:"Wunjo",g:"ᚹ",b:"Freude, Harmonie, Erfüllung",t:"freude,glück,harmonie"},
+    {n:"Hagalaz",g:"ᚺ",b:"Hagelkorn — Prüfung, Wandel, Reinigung durch Chaos",t:"transformation,stärke,zyklus"},
+    {n:"Nauthiz",g:"ᚾ",b:"Notwendigkeit, Widerstand, innere Stärke",t:"stärke,ausdauer,mut"},
+    {n:"Isa",g:"ᛁ",b:"Stille, Innenschau, Innehalten — das Eis",t:"spirituell,stille"},
+    {n:"Jera",g:"ᛃ",b:"Geduld, Ernte, natürliche Zyklen — das Jahr",t:"erfolg,zyklus,ausdauer"},
+    {n:"Eihwaz",g:"ᛇ",b:"Ausdauer, Tod & Neubeginn, Weltachse — die Eibe",t:"transformation,ausdauer,stärke"},
+    {n:"Perthro",g:"ᛈ",b:"Schicksal, Geheimnisse, verborgenes Wissen",t:"weisheit,spirituell,transformation"},
+    {n:"Algiz",g:"ᛉ",b:"Schutz, Verteidigung — die Elchgeweih-Rune",t:"schutz,verteidigung,spirituell"},
+    {n:"Sowilo",g:"ᛋ",b:"Sieg, Sonne, Stärke, göttliches Licht",t:"sieg,stärke,licht,erfolg"},
+    {n:"Tiwaz",g:"ᛏ",b:"Gerechtigkeit, Mut, Selbstaufopferung — die Tyr-Rune",t:"mut,gerechtigkeit,stärke"},
+    {n:"Berkano",g:"ᛒ",b:"Wachstum, Geburt, Neubeginn — die Birken-Rune",t:"neubeginn,wachstum"},
+    {n:"Ehwaz",g:"ᛖ",b:"Partnerschaft, Loyalität, Bewegung — das Pferd",t:"liebe,verbindung,freiheit"},
+    {n:"Mannaz",g:"ᛗ",b:"Menschheit, Selbst, die eigene Natur",t:"identität,weisheit,verbindung"},
+    {n:"Laguz",g:"ᛚ",b:"Intuition, Wasser, Fluss, Unbewusstes",t:"intuition,spirituell,fluss"},
+    {n:"Ingwaz",g:"ᛜ",b:"Fruchtbarkeit, innere Wachstum, Heimkehr",t:"neubeginn,wachstum,heimat"},
+    {n:"Dagaz",g:"ᛞ",b:"Transformation, Licht nach Dunkel — der Durchbruch",t:"transformation,neubeginn,licht"},
+    {n:"Othala",g:"ᛟ",b:"Heimat, Erbe, Abstammung, Wurzeln",t:"heimat,wurzeln,identität"},
+    {n:"Vegvísir",g:"✦",b:"Wikinger-Kompass — findet den Weg durch jeden Sturm",t:"schutz,orientierung,stärke,freiheit"},
+    {n:"Valknut",g:"⋈",b:"Odin-Knoten — Mut im Angesicht des Todes",t:"mut,transformation,stärke,ewigkeit"},
+    {n:"Helm of Awe",g:"✧",b:"Ägishjálmur — absoluter Schutz und Furchtlosigkeit",t:"schutz,stärke,mut"},
+    {n:"Mjölnir",g:"⌇",b:"Thors Hammer — Schutz, Stärke, Kraft der Natur",t:"schutz,stärke,kraft"},
+    {n:"Yggdrasil",g:"⊕",b:"Der Weltbaum — Verbindung aller neun Welten",t:"verbindung,wachstum,spirituell,wurzeln"},
+    {n:"Huginn & Muninn",g:"🦅",b:"Odins Raben — Gedanke und Gedächtnis, Weisheit",t:"weisheit,identität,geist"},
+    {n:"Gungnir",g:"⇧",b:"Odins Speer — Macht, Präzision, göttliche Autorität",t:"stärke,führung,macht"},
+    {n:"Wolfsknoten",g:"⊞",b:"Fenrir-Symbol — ungezähmte Kraft, Freiheit",t:"stärke,freiheit,wildnis"},
+    {n:"Sonnenkreu (Sol)",g:"☀",b:"Germanisches Sonnenrad — Licht, Wärme, kosmische Kraft",t:"licht,stärke,ewigkeit"},
+  ],
+  keltisch:[
+    {n:"Triquetra",g:"⚜",b:"Dreifaltigkeit — Vergangenheit, Gegenwart, Zukunft",t:"spirituell,verbindung,ewigkeit"},
+    {n:"Triskelion",g:"☸",b:"Drei Spiralen — Bewegung, Fortschritt, drei Kräfte",t:"stärke,wachstum,zyklus"},
+    {n:"Celtic Knot",g:"∞",b:"Keltischer Knoten — Ewigkeit, kein Anfang, kein Ende",t:"ewigkeit,verbindung,liebe"},
+    {n:"Claddagh",g:"♡",b:"Liebe, Treue, Freundschaft — irisches Herz-Symbol",t:"liebe,treue,freundschaft"},
+    {n:"Spirale (dreifach)",g:"🌀",b:"Triskele — Leben, Tod, Wiedergeburt",t:"transformation,neubeginn,zyklus,spirituell"},
+    {n:"Awen",g:"⋀",b:"Drei Strahlen — Inspiration, göttlicher Funke der Druiden",t:"kreativität,spirituell,weisheit"},
+    {n:"Tree of Life",g:"⊕",b:"Keltischer Lebensbaum — Wurzeln, Stamm, Krone",t:"wurzeln,wachstum,verbindung,heimat"},
+    {n:"Dara Knot",g:"⋄",b:"Eiche-Knoten — Stärke der Wurzeln, Ausdauer",t:"stärke,wurzeln,ausdauer"},
+    {n:"Brigid-Kreuz",g:"✛",b:"Schutz vor Feuer und Unheil — Frühlingsgöttin",t:"schutz,spirituell,heimat"},
+    {n:"Sheela Na Gig",g:"⊖",b:"Weibliche Urkraft, Fruchtbarkeit, Schutz",t:"weiblichkeit,stärke,schutz"},
+    {n:"Keltisches Kreuz",g:"☩",b:"Verbindung von Himmel und Erde, Ewigkeit",t:"spirituell,ewigkeit,verbindung"},
+    {n:"Cernunnos",g:"🦌",b:"Gehörnter Gott — Natur, Wildtiere, Fruchtbarkeit",t:"natur,freiheit,wachstum"},
+    {n:"Schlange (keltisch)",g:"🐍",b:"Regeneration, Heilung, Unterwelt",t:"transformation,heilung,neubeginn"},
+    {n:"Ogham (Beith)",g:"ᚁ",b:"Erste Ogham-Rune — Birke, Neubeginn, Reinheit",t:"neubeginn,reinheit,wachstum"},
+    {n:"Cauldron of Dagda",g:"◎",b:"Kessel der Götter — Überfluss, Wiedergeburt, Magie",t:"neubeginn,spirituell,erfolg"},
+    {n:"Grüner Mann",g:"🌿",b:"Natur, Fruchtbarkeit, ewige Wiedergeburt",t:"natur,neubeginn,wachstum,spirituell"},
+    {n:"Herne der Jäger",g:"🦌",b:"Waldgeist — Natur, Übergang, Wildheit",t:"freiheit,transformation,natur"},
+    {n:"Schmetterling (keltisch)",g:"🦋",b:"Seele, Transformation, unsterblicher Geist",t:"transformation,spirituell,freiheit"},
+    {n:"Pentakel",g:"⛤",b:"Fünfzackiger Stern — Schutz, fünf Elemente",t:"schutz,spirituell,gleichgewicht"},
+    {n:"Triquestra mit Kreis",g:"⚜",b:"Ewige Dreifaltigkeit im Kreis der Zeit",t:"ewigkeit,spirituell,verbindung"},
+  ],
+  aegyptisch:[
+    {n:"Ankh",g:"☥",b:"Das Lebenszeichen — ewiges Leben und Unsterblichkeit",t:"leben,ewigkeit,spirituell"},
+    {n:"Auge des Horus",g:"𓂀",b:"Wedjat — Schutz, Heilung, Allwissenheit",t:"schutz,heilung,weisheit"},
+    {n:"Auge des Ra",g:"☀",b:"Sonnenauge — Macht, Zorn der Götter, Schutz",t:"stärke,schutz,licht"},
+    {n:"Skarabäus",g:"𓆣",b:"Khepri — Wiedergeburt, Wandel, morgendliche Sonne",t:"neubeginn,transformation,licht"},
+    {n:"Djed-Pfeiler",g:"𓊽",b:"Stabilität, Beständigkeit, Rückgrat des Osiris",t:"stärke,stabilität,ausdauer"},
+    {n:"Feather of Ma'at",g:"𓏏",b:"Feder der Wahrheit — Gerechtigkeit, kosmische Ordnung",t:"wahrheit,gerechtigkeit,gleichgewicht"},
+    {n:"Ouroboros",g:"◎",b:"Schlange die sich selbst beißt — Ewigkeit, Zyklus",t:"ewigkeit,zyklus,transformation"},
+    {n:"Lotus",g:"🪷",b:"Nefertem — Reinheit, Erleuchtung, aus dem Schlamm",t:"spirituell,neubeginn,reinheit"},
+    {n:"Wadjet",g:"𓂀",b:"Kobra-Göttin — göttlicher Schutz, Königsmacht",t:"schutz,stärke,macht"},
+    {n:"Caduceus",g:"⚕",b:"Stab des Hermes/Thoth — Heilung, Balance, Weisheit",t:"heilung,gleichgewicht,weisheit"},
+    {n:"Tyet (Isisknoten)",g:"♀",b:"Knoten der Isis — Schutz, weibliche göttliche Kraft",t:"schutz,weiblichkeit,spirituell"},
+    {n:"Was-Zepter",g:"⇧",b:"Stab der Macht — göttliche Herrschaft, Würde",t:"stärke,führung,macht"},
+    {n:"Nefertiti-Krone",g:"♦",b:"Königin des Nils — Schönheit, Eleganz, weibliche Macht",t:"schönheit,macht,weiblichkeit"},
+    {n:"Cartouche",g:"○",b:"Königsoval — Schutz des Namens, Identität",t:"schutz,identität"},
+    {n:"Anubis-Jackal",g:"🐺",b:"Totenwächter — Übergang, Schutz der Seele",t:"transformation,schutz,spirituell"},
+    {n:"Bastet-Katze",g:"🐱",b:"Katzengöttin — Freude, Schutz, weibliche Anmut",t:"schutz,freude,weiblichkeit"},
+    {n:"Thoth-Ibis",g:"🦅",b:"Gott der Schrift — Weisheit, Wissen, Mondgott",t:"weisheit,licht,spirituell"},
+    {n:"Sekhmet",g:"🦁",b:"Löwengöttin — Heilung und Krieg, duale Kraft",t:"stärke,heilung,weiblichkeit"},
+    {n:"Nefer",g:"♭",b:"Schönheit, Güte, Vollkommenheit — das schöne Herz",t:"schönheit,harmonie,glück"},
+    {n:"Kheper (Sonne aufgehend)",g:"🌅",b:"Aufgehende Sonne — Neubeginn, tägliche Wiedergeburt",t:"neubeginn,licht,transformation"},
+  ],
+  japanisch:[
+    {n:"Enso",g:"○",b:"Zen-Kreis — Vollständigkeit, Erleuchtung, der Moment",t:"spirituell,frieden,vollständigkeit"},
+    {n:"Torii",g:"⛩",b:"Das Tor zwischen Welt und Göttlichem",t:"spirituell,übergang,transformation"},
+    {n:"Koi",g:"🐟",b:"Beharrlichkeit gegen den Strom — Mut und Ausdauer",t:"mut,ausdauer,stärke,erfolg"},
+    {n:"Kirschblüte",g:"🌸",b:"Mono no Aware — Schönheit der Vergänglichkeit",t:"neubeginn,schönheit"},
+    {n:"Drache (Ryū)",g:"龍",b:"Stärke, Weisheit, göttlicher Schutz — Wassergott",t:"stärke,weisheit,schutz"},
+    {n:"Chrysantheme",g:"🌼",b:"Kiku — Vollkommenheit, Longevität, kaiserliche Würde",t:"vollständigkeit,stärke,schönheit"},
+    {n:"Welle (Hokusai)",g:"〰",b:"Kanagawa — Kraft der Natur, Überwindung",t:"stärke,freiheit,fluss"},
+    {n:"Oni-Maske",g:"👹",b:"Dämonenschutz — böse Geister abwehren",t:"schutz,stärke"},
+    {n:"Furinkazan",g:"風",b:"Schnell wie Wind, ruhig wie Wald, heftig wie Feuer",t:"stärke,weisheit,mut"},
+    {n:"Peonie (Botan)",g:"🌹",b:"Wohlstand, Tapferkeit, weibliche Stärke",t:"erfolg,glück,weiblichkeit"},
+    {n:"Hannya-Maske",g:"😈",b:"Eifersüchtige Dämonin — verborgene Tiefe, Leidenschaft",t:"transformation,stärke,leidenschaft"},
+    {n:"Daruma",g:"◯",b:"Unerschütterlichkeit — hinfallen und aufstehen",t:"ausdauer,mut,erfolg,neubeginn"},
+    {n:"Tomoe (Mitsudomoe)",g:"☯",b:"Drei Wirbel — Bewegung, Gleichgewicht, Kreislauf",t:"gleichgewicht,zyklus,stärke"},
+    {n:"Seigaiha",g:"◠",b:"Blaue Meereswellen-Muster — Glück, Wohlstand, Schutz",t:"glück,schutz,frieden"},
+    {n:"Fudo Myoo",g:"🔥",b:"Unbeweglicher König — Feuer, Reinigung, Schutz",t:"schutz,stärke,transformation"},
+    {n:"Raijin",g:"⚡",b:"Donnergott — Stärke, Energie, der Urklang",t:"stärke,energie,transformation"},
+    {n:"Fujin",g:"🌀",b:"Windgott — Freiheit, Wandel, kosmischer Atem",t:"freiheit,transformation,stärke"},
+    {n:"Benzaiten",g:"♪",b:"Göttin der Kunst — Kreativität, Musik, Schönheit",t:"kreativität,schönheit,glück"},
+    {n:"Tsuru (Kranich)",g:"🦢",b:"1000 Jahre — Langlebigkeit, Glück, Frieden",t:"glück,frieden,ausdauer"},
+    {n:"Kitsune (Fuchs)",g:"🦊",b:"Neun-Schwanz-Fuchs — Intelligenz, Magie, Transformation",t:"weisheit,transformation,spirituell"},
+    {n:"Namazu",g:"🐟",b:"Riesenwels — Erdkraft, unkontrollierbare Natur",t:"stärke,natur,transformation"},
+    {n:"Tengu",g:"🦅",b:"Waldgeist — Stolz, Kampfkunst, übernatürliche Kraft",t:"stärke,weisheit,spirituell"},
+  ],
+  spirituell:[
+    {n:"Om / Aum",g:"ॐ",b:"Urklang des Universums — kosmische Verbindung",t:"spirituell,verbindung,frieden"},
+    {n:"Unalome",g:"𑁇",b:"Der Weg zur Erleuchtung — Irrwege und Aufstieg",t:"spirituell,transformation,neubeginn"},
+    {n:"Mandala",g:"◉",b:"Kosmische Ordnung, Ganzheit, Meditation",t:"spirituell,vollständigkeit,frieden"},
+    {n:"Blume des Lebens",g:"✿",b:"Geometrie aller Lebensformen — Urform des Seins",t:"spirituell,verbindung,ewigkeit"},
+    {n:"Merkaba",g:"✡",b:"Licht-Geist-Körper — göttliches Reisegefährt",t:"spirituell,schutz,transformation"},
+    {n:"Hamsa",g:"🖐",b:"Hand der Fatima — Schutz, Glück, göttliche Fürsorge",t:"schutz,glück,spirituell"},
+    {n:"Yin Yang",g:"☯",b:"Dualität in Harmonie — alles enthält sein Gegenteil",t:"gleichgewicht,harmonie"},
+    {n:"Sri Yantra",g:"△",b:"Heilige Geometrie — neun Dreiecke, Weg zur Erleuchtung",t:"spirituell,weisheit"},
+    {n:"Dharma-Rad",g:"☸",b:"Achtfacher Pfad des Buddha, kosmisches Gesetz",t:"spirituell,weisheit,frieden"},
+    {n:"Bodhi-Baum",g:"🌳",b:"Baum der Erleuchtung — Buddhas Erwachen",t:"spirituell,weisheit,wachstum"},
+    {n:"Ouroboros",g:"◎",b:"Ewige Schlange — Zyklus ohne Anfang und Ende",t:"ewigkeit,zyklus,transformation"},
+    {n:"Seed of Life",g:"⊙",b:"Sieben Kreise — Schöpfung, Ursprung des Lebens",t:"spirituell,neubeginn,verbindung"},
+    {n:"Metatrons Würfel",g:"✡",b:"Alle platonischen Körper — Struktur des Universums",t:"spirituell,weisheit,ewigkeit"},
+    {n:"Vesica Piscis",g:"⋈",b:"Fischauge — göttliche Schöpfung, Heilige Geometrie",t:"spirituell,verbindung,schöpfung"},
+    {n:"Fibonacci-Spirale",g:"🌀",b:"Goldener Schnitt — Muster des Lebens in der Natur",t:"natur,schönheit,ewigkeit"},
+    {n:"Auge der Vorsehung",g:"👁",b:"Alles sehendes Auge — göttliche Fürsorge, Weisheit",t:"weisheit,spirituell,schutz"},
+    {n:"Unendlichkeit ∞",g:"∞",b:"Kein Anfang, kein Ende — ewige Möglichkeiten",t:"ewigkeit,freiheit,liebe"},
+    {n:"Pentagram",g:"⛤",b:"Fünfzackiger Stern — fünf Elemente, Schutz",t:"schutz,spirituell,gleichgewicht"},
+    {n:"Hexagram",g:"✡",b:"Davidstern / Stern der Venus — Balance aller Kräfte",t:"gleichgewicht,spirituell,schutz"},
+    {n:"Chakra Ajna",g:"◉",b:"Drittes Auge — Intuition, inneres Sehen, Weisheit",t:"intuition,weisheit,spirituell"},
+    {n:"Lotus-Unalome",g:"𑁇",b:"Erleuchtungsweg der aus dem Schlamm wächst",t:"spirituell,neubeginn,wachstum"},
+    {n:"Caduceus",g:"⚕",b:"Stab des Hermes — Balance, Heilung, Botschaft",t:"heilung,gleichgewicht,weisheit"},
+  ],
+  amazigh:[
+    {n:"Yaz",g:"ⵣ",b:"Freiheit, aufrechter Mensch — bekanntestes Amazigh-Symbol",t:"freiheit,identität,stärke"},
+    {n:"Tifinagh-Kreuz",g:"+",b:"Kosmische Balance, Schutz an Wegkreuzungen",t:"schutz,gleichgewicht,orientierung"},
+    {n:"Schlange (Aẓar)",g:"𓆙",b:"Heiligkeit, Schutz, regenerative Kraft",t:"schutz,heilung,transformation"},
+    {n:"Mond & Stern",g:"☾",b:"Lebenszyklus, weibliche Energie, Erneuerung",t:"zyklus,weiblichkeit,neubeginn"},
+    {n:"Agounni",g:"◯",b:"Schutzringe — Vollständigkeit, Kreisschutz",t:"schutz,vollständigkeit,zyklus"},
+    {n:"Handfläche (Tafust)",g:"✋",b:"Schöpferkraft, aktiver Schutz der Familie",t:"schutz,familie,stärke"},
+    {n:"Dreieck (Talest)",g:"△",b:"Stärke der Amazigh-Frauen, Schönheit",t:"stärke,weiblichkeit,identität"},
+    {n:"Wasser (Aman)",g:"〰",b:"Lebensquelle, Fluss und Anpassungsfähigkeit",t:"leben,freiheit,anpassung"},
+    {n:"Raute (Tasna)",g:"◇",b:"Schutz, Fruchtbarkeit, weibliches Prinzip",t:"schutz,weiblichkeit,fruchtbarkeit"},
+    {n:"Zickzack (Anzar)",g:"⋀",b:"Regen, Himmelskraft, Regengott",t:"stärke,natur,spirituell"},
+    {n:"Kreuzritzung",g:"✕",b:"Verbindungspunkt — Balance der Gegensätze",t:"gleichgewicht,verbindung,schutz"},
+    {n:"Spiralkette",g:"⊃",b:"Fortlaufendes Leben, ewige Verbindung",t:"ewigkeit,verbindung,zyklus"},
+    {n:"Vogel (Agazzal)",g:"🦅",b:"Freiheit, Botschaft der Götter, Weitblick",t:"freiheit,weisheit,spirituell"},
+    {n:"Sonne (Tafukt)",g:"☀",b:"Lebensspenderin, Wärme, kosmische Kraft",t:"licht,stärke,leben"},
+    {n:"Zwei Dreiecke",g:"⋈",b:"Gegensätze in Balance — Mann und Frau, Himmel und Erde",t:"gleichgewicht,liebe,harmonie"},
+  ],
+  astrologie:[
+    {n:"Widder ♈",g:"♈",b:"Mut, Pioniergeist, Durchsetzungsvermögen",t:"mut,stärke,führung"},
+    {n:"Stier ♉",g:"♉",b:"Beständigkeit, Sinnlichkeit, Ausdauer",t:"ausdauer,stärke,stabilität"},
+    {n:"Zwillinge ♊",g:"♊",b:"Wandlungsfähigkeit, Kommunikation, Neugier",t:"transformation,kreativität"},
+    {n:"Krebs ♋",g:"♋",b:"Fürsorge, Intuition, Heimatverbundenheit",t:"liebe,intuition,heimat"},
+    {n:"Löwe ♌",g:"♌",b:"Führung, Leidenschaft, Selbstausdruck",t:"stärke,mut,führung"},
+    {n:"Jungfrau ♍",g:"♍",b:"Perfektion, Analyse, Dienst am anderen",t:"weisheit,ausdauer"},
+    {n:"Waage ♎",g:"♎",b:"Gleichgewicht, Harmonie, Gerechtigkeit",t:"gleichgewicht,harmonie"},
+    {n:"Skorpion ♏",g:"♏",b:"Transformation, Tiefe, Regeneration",t:"transformation,stärke"},
+    {n:"Schütze ♐",g:"♐",b:"Freiheit, Philosophie, Fernweh",t:"freiheit,weisheit"},
+    {n:"Steinbock ♑",g:"♑",b:"Disziplin, Ehrgeiz, Beharrlichkeit",t:"ausdauer,erfolg"},
+    {n:"Wassermann ♒",g:"♒",b:"Individualität, Humanismus, Revolution",t:"freiheit,identität"},
+    {n:"Fische ♓",g:"♓",b:"Mitgefühl, Intuition, Spiritualität",t:"liebe,intuition,spirituell"},
+    {n:"Sonne ☉",g:"☉",b:"Lebenskraft, bewusstes Selbst, Vitalität",t:"stärke,licht,identität"},
+    {n:"Mond ☽",g:"☽",b:"Intuition, Unbewusstes, Wandel, Weiblichkeit",t:"intuition,spirituell,weiblichkeit"},
+    {n:"Venus ♀",g:"♀",b:"Liebe, Schönheit, Harmonie, Anziehung",t:"liebe,schönheit,harmonie"},
+    {n:"Mars ♂",g:"♂",b:"Energie, Mut, Durchsetzungswille, Feuer",t:"mut,stärke,energie"},
+    {n:"Merkur ☿",g:"☿",b:"Kommunikation, Intelligenz, Flexibilität",t:"weisheit,kreativität,geist"},
+    {n:"Jupiter ♃",g:"♃",b:"Wachstum, Glück, Weisheit, Expansion",t:"erfolg,glück,wachstum,weisheit"},
+    {n:"Saturn ♄",g:"♄",b:"Zeit, Karma, Disziplin, Grenzen meistern",t:"ausdauer,transformation,weisheit"},
+    {n:"Uranus ♅",g:"♅",b:"Revolution, Originalität, plötzlicher Wandel",t:"freiheit,transformation,kreativität"},
+    {n:"Neptun ♆",g:"♆",b:"Träume, Spiritualität, Illusion, Tiefe",t:"spirituell,intuition,transformation"},
+    {n:"Pluto ♇",g:"♇",b:"Tod und Wiedergeburt, tiefste Transformation",t:"transformation,neubeginn,stärke"},
+    {n:"Chiron ⚷",g:"⚷",b:"Der verwundete Heiler — Heilung durch Schmerz",t:"heilung,transformation,weisheit"},
+    {n:"Schwarzer Mond Lilith",g:"⚸",b:"Wilde Freiheit, dunkle Weiblichkeit, Unabhängigkeit",t:"freiheit,weiblichkeit,stärke"},
+  ],
+  alchemie:[
+    {n:"Feuer △",g:"△",b:"Transformation durch Feuer — Energie und Reinigung",t:"transformation,stärke,energie"},
+    {n:"Wasser ▽",g:"▽",b:"Intuition, Tiefe, Unbewusstes, Fluss",t:"intuition,spirituell,fluss"},
+    {n:"Luft △̲",g:"⊿",b:"Intellekt, Freiheit, Kommunikation, Geist",t:"freiheit,weisheit,geist"},
+    {n:"Erde ▽̄",g:"⊽",b:"Stabilität, Fruchtbarkeit, Materialität",t:"stabilität,wachstum,heimat"},
+    {n:"Feuer+Erde",g:"⋈",b:"Fünftes Element — Äther, das Spirituelle",t:"spirituell,ewigkeit,transformation"},
+    {n:"Ouroboros",g:"◎",b:"Ewiger Kreislauf — Schlange die sich selbst frisst",t:"ewigkeit,transformation,zyklus"},
+    {n:"Stein der Weisen",g:"⋆",b:"Lapis Philosophorum — Transformation zur höchsten Form",t:"transformation,weisheit,erfolg"},
+    {n:"Quintessenz",g:"⊕",b:"Fünftes Element — der Äther, das Göttliche",t:"spirituell,ewigkeit"},
+    {n:"Sulfur (Seele)",g:"△⊙",b:"Männliches Prinzip, Feuer der Seele, Wille",t:"stärke,identität,geist"},
+    {n:"Merkur ☿",g:"☿",b:"Das Flüchtige — Geist, Kommunikation, Balance",t:"geist,weisheit,gleichgewicht"},
+    {n:"Salz ⊕",g:"⊕",b:"Der Körper — Materie, Beständigkeit, Erde",t:"stabilität,körper,ausdauer"},
+    {n:"Sol (Gold)",g:"☀",b:"Sonne — Vollendung, das Ziel aller Alchemie",t:"erfolg,licht,spirituell"},
+    {n:"Luna (Silber)",g:"☽",b:"Mond — Intuition, weibliche Kraft, Wandel",t:"intuition,weiblichkeit,transformation"},
+    {n:"Kupfer ♀",g:"♀",b:"Venus-Metall — Liebe, Heilung, Harmonie",t:"liebe,heilung,harmonie"},
+    {n:"Eisen ♂",g:"♂",b:"Mars-Metall — Stärke, Mut, Kraft",t:"stärke,mut,kraft"},
+    {n:"Saturn ♄",g:"♄",b:"Blei — Zeit, Karma, Reife durch Prüfung",t:"ausdauer,transformation,weisheit"},
+    {n:"Antimony ♁",g:"♁",b:"Wilde Kraft der Natur — das Tier in uns",t:"stärke,natur,transformation"},
+    {n:"Caduceus",g:"⚕",b:"Mercurius — vereint alle Gegensätze, Heilung",t:"heilung,gleichgewicht,transformation"},
+  ],
+  tribal:[
+    {n:"Koru",g:"🌀",b:"Maori-Spirale — Neubeginn, Wachstum, Frieden",t:"neubeginn,wachstum,frieden"},
+    {n:"Manaia",g:"⊊",b:"Maori-Wächtergeist — Schutz und Balance",t:"schutz,gleichgewicht,spirituell"},
+    {n:"Hei Tiki",g:"◉",b:"Maori-Talisman — Fruchtbarkeit, Stärke, Glück",t:"glück,schutz,stärke"},
+    {n:"Enata",g:"⊙",b:"Polynesisch: Mensch — Familie, Verbindung, Gemeinschaft",t:"verbindung,familie,identität"},
+    {n:"Turtle (Honu)",g:"🐢",b:"Pazifische Schildkröte — Navigation, Langlebigkeit, Heimat",t:"ausdauer,heimat,führung"},
+    {n:"Shark Teeth (Niho Mano)",g:"⋏",b:"Schutz der Krieger, Stärke, Anpassung",t:"schutz,stärke,mut"},
+    {n:"Manta Ray",g:"⋅",b:"Eleganz, Anpassungsfähigkeit, Freiheit im Wasser",t:"freiheit,eleganz,anpassung"},
+    {n:"Haida-Adler",g:"🦅",b:"Nordwest-Küstenkunst — Weitsicht, Führerschaft",t:"freiheit,führung,weisheit"},
+    {n:"Spearhead (Maori)",g:"△",b:"Tapferkeit, Stärke, Kriegergeist",t:"stärke,mut,führung"},
+    {n:"Fischknochen (Ihu)",g:"⟺",b:"Polynesian — Lebenskraft, Fürsorge für Familie",t:"leben,familie,stärke"},
+    {n:"Maori Ta Moko",g:"⊞",b:"Gesichtstattoo-Muster — Identität, Abstammung, Status",t:"identität,familie,stärke"},
+    {n:"Samoan Pe'a",g:"◼",b:"Samoanisches Krieger-Tattoo — Pflicht, Ehre, Schutz",t:"stärke,ehre,schutz,identität"},
+    {n:"Hawaiian Kakau",g:"▲",b:"Hawaiianisches Schutz-Tattoo — spiritueller Schutz",t:"schutz,spirituell,identität"},
+    {n:"Tiki",g:"☺",b:"Polynesischer Schutzgeist — Glück, Fruchtbarkeit",t:"schutz,glück,spirituell"},
+    {n:"Marquesas-Kreuz",g:"✚",b:"Balance der Elemente, Verbindung mit Erde und Himmel",t:"gleichgewicht,spirituell,verbindung"},
+    {n:"Papatūānuku",g:"⊕",b:"Mutter Erde (Maori) — Ursprung, Fürsorge, Heimat",t:"heimat,natur,spirituell,mutter"},
+  ],
+  griechisch:[
+    {n:"Meander",g:"⌇",b:"Unendlicher Fluss — Ewigkeit, Lebensweg",t:"ewigkeit,verbindung,fluss"},
+    {n:"Laurel",g:"🌿",b:"Lorbeerkranz — Ruhm, Sieg, Ehre",t:"sieg,erfolg,ehre"},
+    {n:"Caduceus",g:"⚕",b:"Hermes Stab — Heilung, Handel, kosmische Balance",t:"heilung,gleichgewicht,weisheit"},
+    {n:"Labrys",g:"⚒",b:"Doppelaxe — Matriarchat, weibliche Stärke, Kreta",t:"stärke,weiblichkeit,macht"},
+    {n:"Phi Φ",g:"Φ",b:"Goldener Schnitt — natürliche Vollkommenheit",t:"schönheit,vollständigkeit,harmonie"},
+    {n:"Omega Ω",g:"Ω",b:"Das Ende und die Vollendung — Unendlichkeit",t:"ewigkeit,vollständigkeit,transformation"},
+    {n:"Delta △",g:"△",b:"Veränderung, Transformation, Tor zur Energie",t:"transformation,neubeginn"},
+    {n:"Sigma Σ",g:"Σ",b:"Die Summe aller Dinge — Vollständigkeit",t:"vollständigkeit,identität"},
+    {n:"Alpha & Omega",g:"Αω",b:"Anfang und Ende zugleich — Ewigkeit, Ganzheit",t:"ewigkeit,vollständigkeit,spirituell"},
+    {n:"Gorgoneion",g:"⊛",b:"Medusa-Haupt — Schutz, Abwehr aller Feinde",t:"schutz,stärke,mut"},
+    {n:"Trident (Poseidon)",g:"⚡",b:"Dreizack des Meeresgottes — Macht, Wildheit",t:"stärke,macht,freiheit"},
+    {n:"Pegasus",g:"🦅",b:"Geflügeltes Pferd — Inspiration, Freiheit, Aufstieg",t:"freiheit,kreativität,transformation"},
+    {n:"Schlüssel (Hecate)",g:"🗝",b:"Schlüssel der Hecate — Übergang, Geheimnisse",t:"transformation,weisheit,spirituell"},
+    {n:"Ouroboros (griechisch)",g:"◎",b:"Ewig sich erneuernde Schlange — Zeit, Kosmos",t:"ewigkeit,zyklus,spirituell"},
+    {n:"Hekate-Kreuz",g:"✛",b:"Göttin der Magie — Schutz an Wegkreuzungen",t:"schutz,spirituell,transformation"},
+  ],
+  aztekisch:[
+    {n:"Sonnenstein",g:"☀",b:"Aztekischer Kalender — Zeit, kosmische Ordnung",t:"stärke,licht,ewigkeit,identität"},
+    {n:"Quetzalcoatl",g:"🐍",b:"Gefiederte Schlange — Weisheit, Schöpfung, Übergang",t:"transformation,weisheit,spirituell"},
+    {n:"Tonatiuh",g:"◉",b:"Sonnengott — tägliche Kraft, ewiges Licht",t:"stärke,licht,spirituell"},
+    {n:"Coatl (Schlange)",g:"〰",b:"Erneuerung, Heilung, göttliche Energie",t:"transformation,heilung,neubeginn"},
+    {n:"Nahual",g:"🐆",b:"Tiergeist-Schutzseele — innere Kraft, Identität",t:"schutz,stärke,identität,spirituell"},
+    {n:"Ollin",g:"✦",b:"Bewegung — kosmischer Wandel, das Erdbeben",t:"transformation,stärke,zyklus"},
+    {n:"Miquiztli",g:"💀",b:"Tod — Wiedergeburt, Ehrung der Ahnen",t:"transformation,neubeginn,ewigkeit"},
+    {n:"Xochitl (Blume)",g:"✿",b:"Schönheit, Kunst, Freude und Vollständigkeit",t:"schönheit,kreativität,glück"},
+    {n:"Tlaloc",g:"🌧",b:"Regengott — Lebensquelle, Fruchtbarkeit",t:"leben,natur,wachstum"},
+    {n:"Huitzilopochtli",g:"☀",b:"Kriegs- und Sonnengott — Stärke, Schutz des Volkes",t:"stärke,schutz,mut"},
+    {n:"Chalchiuhtlicue",g:"🌊",b:"Göttin des Wassers — Schönheit, Fluss, Reinigung",t:"reinheit,schönheit,transformation"},
+    {n:"Aztekischer Adler",g:"🦅",b:"Krieger-Symbol — Mut, Stärke, Sonnenvolk",t:"stärke,mut,führung"},
+    {n:"Tepeyollotl",g:"🐆",b:"Jaguar-Herz — Echo, Dunkelheit, innere Stärke",t:"stärke,transformation,identität"},
+    {n:"Xipe Totec",g:"🌱",b:"Gehäuteter Gott — Erneuerung durch Schmerz, Wachstum",t:"neubeginn,wachstum,transformation"},
+    {n:"Cem Anahuac",g:"⊕",b:"Die Welt als Einheit — Zusammenhalt aller Dinge",t:"verbindung,ewigkeit,spirituell"},
+  ],
+  hinduistisch:[
+    {n:"Ganesha",g:"🐘",b:"Elefantengott — Überwindung von Hindernissen, Neubeginn",t:"neubeginn,erfolg,schutz,spirituell"},
+    {n:"Trishula",g:"⚔",b:"Shivas Dreizack — Schöpfung, Erhalt, Zerstörung in Balance",t:"stärke,spirituell,transformation,gleichgewicht"},
+    {n:"Nataraja",g:"♾",b:"Shiva als kosmischer Tänzer — ewiger Kreislauf",t:"transformation,ewigkeit,spirituell,zyklus"},
+    {n:"Chakras (alle 7)",g:"⊕",b:"Energiezentren — Heilung, spirituelles Wachstum",t:"spirituell,heilung,wachstum"},
+    {n:"Hamsa (hinduistisch)",g:"🖐",b:"Hand der Göttin — Schutz, Segen",t:"schutz,spirituell,glück"},
+    {n:"Sudarshana Chakra",g:"☸",b:"Vishnus Rad — göttliche Gerechtigkeit, Schutz",t:"schutz,stärke,gerechtigkeit"},
+    {n:"Kali-Yantra",g:"△",b:"Geometrie der Göttin Kali — Kraft, Transformation",t:"stärke,schutz,transformation,weiblichkeit"},
+    {n:"Padma (Lotus)",g:"🪷",b:"Reinheit, Erleuchtung — aus dem Schlamm geboren",t:"spirituell,neubeginn,reinheit"},
+    {n:"Aum mit Auge",g:"ॐ",b:"Om mit drittem Auge — höchste Erleuchtung",t:"spirituell,weisheit,licht"},
+    {n:"Sri Chakra",g:"◉",b:"Neun Dreiecke der Göttin Lalita — Schöpfung",t:"spirituell,weiblichkeit,schöpfung"},
+    {n:"Saraswati",g:"🪷",b:"Göttin der Weisheit — Kunst, Wissen, Kreativität",t:"weisheit,kreativität,spirituell"},
+    {n:"Durga (Tiger)",g:"🐯",b:"Krieger-Göttin — Stärke gegen das Böse",t:"stärke,schutz,weiblichkeit,mut"},
+    {n:"Hanuman",g:"🐒",b:"Affengott — Loyalität, Stärke, Hingabe",t:"stärke,liebe,mut,spirituell"},
+    {n:"Nandi (Stier)",g:"🐂",b:"Shivas Stier — Kraft, Reinheit, Zuverlässigkeit",t:"stärke,ausdauer,spirituell"},
+    {n:"Kalasha",g:"◎",b:"Füllhorn — Fülle, Glück, göttlicher Segen",t:"glück,erfolg,spirituell"},
+    {n:"Bindu",g:"·",b:"Punkt im Zentrum — Ursprung aller Schöpfung",t:"spirituell,neubeginn,vollständigkeit"},
+  ],
+  slawisch:[
+    {n:"Kolowrat",g:"✦",b:"Sonnenrad — kosmische Ordnung, ewiger Kreislauf",t:"ewigkeit,licht,zyklus,stärke"},
+    {n:"Perun-Zeichen",g:"⚡",b:"Donnergottes Zeichen — Schutz, Stärke, Gerechtigkeit",t:"schutz,stärke,gerechtigkeit"},
+    {n:"Rod-Symbol",g:"◉",b:"Ur-Ahne — Ursprung, Familie, Lebensbaum",t:"heimat,familie,wurzeln,spirituell"},
+    {n:"Bereginya",g:"⊞",b:"Muttergöttin — Schutz, Fruchtbarkeit, weibliche Kraft",t:"schutz,weiblichkeit,neubeginn"},
+    {n:"Triglav",g:"△",b:"Dreiköpfiger Gott — Vergangenheit, Gegenwart, Zukunft",t:"ewigkeit,weisheit,zyklus"},
+    {n:"Molvinets",g:"✡",b:"Schutzsymbol — Abwehr von Bösem",t:"schutz,spirituell"},
+    {n:"Ladinets",g:"✦",b:"Stern der Liebesgöttin — Harmonie, Glück",t:"liebe,schutz,harmonie"},
+    {n:"Weltbaum (Slawisch)",g:"⊕",b:"Lebensbaum — Verbindung der drei Welten",t:"wurzeln,verbindung,spirituell,wachstum"},
+    {n:"Veles-Schlange",g:"🐍",b:"Gott der Unterwelt — Weisheit, Reichtum, Magie",t:"weisheit,transformation,spirituell"},
+    {n:"Makosh-Zeichen",g:"⋈",b:"Göttin des Schicksals — Glück, Wohlstand, Spinnerin",t:"glück,weiblichkeit,erfolg"},
+    {n:"Ratiborets",g:"◇",b:"Krieger-Schutz — Tapferkeit im Kampf",t:"schutz,stärke,mut"},
+    {n:"Svarog-Kreuz",g:"⊞",b:"Feuer-Gott — Schmiede, Schöpfung, heiliges Feuer",t:"stärke,transformation,schöpfung"},
+  ],
+  voodoo:[
+    {n:"Vévé Baron Samedi",g:"✛",b:"Kreuz des Todes-Loa — Grenze zwischen Leben und Tod",t:"transformation,ewigkeit,spirituell"},
+    {n:"Vévé Erzulie",g:"♡",b:"Loa der Liebe — Herz, Anmut, Schönheit",t:"liebe,schönheit,weiblichkeit"},
+    {n:"Vévé Ogou",g:"⚔",b:"Krieger-Loa — Stärke, Feuer, Schutz",t:"stärke,schutz,mut"},
+    {n:"Vévé Legba",g:"✝",b:"Hüter der Schwelle — Wege öffnen, Kommunikation",t:"freiheit,neubeginn,spirituell"},
+    {n:"Vévé Damballah",g:"〰",b:"Schlangen-Loa — Ursprung, Reinheit, kosmische Weisheit",t:"weisheit,spirituell,ewigkeit"},
+    {n:"Vévé Agwe",g:"🌊",b:"Loa des Meeres — Reise, Tiefe, Freiheit",t:"freiheit,reise,stärke"},
+    {n:"Vévé Maman Brigitte",g:"☩",b:"Loa des Todes — Schutz der Gräber, Magie",t:"schutz,transformation,spirituell"},
+    {n:"Adinkra Sankofa",g:"↩",b:"Ghana: aus der Vergangenheit lernen, zurückkehren",t:"weisheit,identität,wurzeln,transformation"},
+    {n:"Adinkra Gye Nyame",g:"⊛",b:"Nur Gott — höchste göttliche Macht",t:"spirituell,stärke,ewigkeit"},
+    {n:"Adinkra Nyame Dua",g:"⊕",b:"Baum Gottes — göttlicher Schutz, Gegenwart",t:"schutz,spirituell,heimat"},
+    {n:"Adinkra Dwennimmen",g:"⋈",b:"Widderhorn — Stärke mit Demut",t:"stärke,weisheit,gleichgewicht"},
+    {n:"Adinkra Epa",g:"⊞",b:"Handschellen — Gerechtigkeit, Gesetz, Freiheit",t:"gerechtigkeit,freiheit,identität"},
+  ],
+  nativeamerican:[
+    {n:"Traumfänger",g:"⊙",b:"Dreamcatcher — filtert böse Träume, schützt den Schlaf",t:"schutz,spirituell,heilung"},
+    {n:"Thunderbird",g:"🦅",b:"Donneradler — Macht, Stärke, Verbindung zum Himmel",t:"stärke,freiheit,spirituell"},
+    {n:"Medizinrad",g:"⊕",b:"Sacred Hoop — Ganzheit, vier Richtungen, kosmische Balance",t:"gleichgewicht,spirituell,heilung"},
+    {n:"Adlerfeder",g:"🪶",b:"Verbindung zum Großen Geist, Ehrung, Freiheit",t:"freiheit,spirituell,identität"},
+    {n:"Schildkröte",g:"🐢",b:"Turtle Island — Erde, Ausdauer, Langlebigkeit",t:"heimat,ausdauer,stärke"},
+    {n:"Wolf",g:"🐺",b:"Clanführer — Loyalität, Intuition, Wegweiser",t:"stärke,intuition,führung,identität"},
+    {n:"Bär",g:"🐻",b:"Stärke und Medizin — Kriegermut und Heilung",t:"stärke,heilung,mut"},
+    {n:"Vier Winde",g:"✦",b:"Kosmische Balance — alle Richtungen und Kräfte",t:"gleichgewicht,spirituell,freiheit"},
+    {n:"Kokopelli",g:"♬",b:"Fruchtbarkeitsgott — Freude, Musik, Neubeginn",t:"neubeginn,glück,kreativität"},
+    {n:"Regenbogenschlange",g:"〰",b:"Schöpfer der Wasserwege, Heilung, Wandel",t:"transformation,heilung,schöpfung"},
+    {n:"Pueblo-Sonne",g:"☀",b:"Sonnenkult — Licht, Wachstum, Leben",t:"licht,leben,stärke"},
+    {n:"Büffel (Bison)",g:"🦬",b:"Fülle, Dankbarkeit, Stärke der Gemeinschaft",t:"stärke,dankbarkeit,gemeinschaft"},
+    {n:"Peyote-Blüte",g:"✿",b:"Heilige Pflanze — Visionen, Heilung, Transformation",t:"spirituell,heilung,transformation"},
+    {n:"Rabe (Trickster)",g:"🐦",b:"Schöpfer und Trickster — Wandel, Intelligenz, Chaos",t:"transformation,weisheit,kreativität"},
+    {n:"Schlangenadler",g:"🦅",b:"Kampf zwischen Erde und Himmel — Balance der Kräfte",t:"stärke,gleichgewicht,spirituell"},
+  ],
+  chinesisch:[
+    {n:"Bagua (Ba Gua)",g:"☯",b:"Acht Trigramme — kosmische Kräfte, Schutz, Feng Shui",t:"gleichgewicht,schutz,spirituell,ewigkeit"},
+    {n:"Drache (Lóng)",g:"龍",b:"Chinesischer Drache — Glück, Macht, göttlicher Schutz",t:"stärke,glück,schutz"},
+    {n:"Phönix (Fènghuáng)",g:"🦅",b:"Chinesischer Phönix — Wiedergeburt, Unsterblichkeit",t:"transformation,neubeginn,stärke"},
+    {n:"双喜 (Doppelglück)",g:"囍",b:"Doppeltes Glück — Liebe, Freude, Heirat",t:"liebe,glück,freude"},
+    {n:"福 (Fú)",g:"福",b:"Zeichen für Glück und Wohlstand",t:"glück,erfolg"},
+    {n:"Koi (Lǐyú)",g:"🐟",b:"Karpfen der Drachenpforte — Ausdauer, Erfolg",t:"erfolg,ausdauer,mut"},
+    {n:"Lotus (Héhuā)",g:"🪷",b:"Reinheit des Herzens — Erleuchtung aus dem Schlamm",t:"spirituell,neubeginn,reinheit"},
+    {n:"Tiger (Hǔ)",g:"🐯",b:"König der Tiere — Mut, Kraft, Schutz vor Bösem",t:"stärke,mut,schutz"},
+    {n:"Yin-Yang",g:"☯",b:"Harmonie der Gegensätze — Balance aller Kräfte",t:"gleichgewicht,harmonie,ewigkeit"},
+    {n:"Glückswolken (Yún)",g:"☁",b:"Übergang, Wandel, Glück und Freiheit",t:"freiheit,transformation,glück"},
+    {n:"Bambus (Zhú)",g:"🎋",b:"Biegsamkeit und Stärke — Wachstum, Ausdauer",t:"stärke,ausdauer,wachstum"},
+    {n:"Pflaume (Méihuā)",g:"🌸",b:"Winterblüte — Ausdauer in der Kälte, Schönheit",t:"ausdauer,schönheit,stärke"},
+    {n:"Chrysantheme (Jú)",g:"🌼",b:"Longevität, Freude im Herbst des Lebens",t:"ausdauer,glück,vollständigkeit"},
+    {n:"Schildkröte (Guī)",g:"🐢",b:"Langlebigkeit, Stabilität, kosmische Stütze",t:"ausdauer,stabilität,ewigkeit"},
+    {n:"Kranich (Hè)",g:"🦢",b:"Unsterblichkeit, Weisheit, Eleganz",t:"ewigkeit,weisheit,schönheit"},
+    {n:"Fledermaus (Biān Fú)",g:"🦇",b:"Glück — das chinesische Wort für Fledermaus klingt wie Glück",t:"glück,erfolg"},
+    {n:"Kiefer (Sōng)",g:"🌲",b:"Langlebigkeit, Einsamkeit, ewige Stärke",t:"stärke,ausdauer,ewigkeit"},
+  ],
+// ===== WESTLICHER TIERKREIS =====
+  tierkreis_west:[
+    {n:"Widder ♈",g:"♈",b:"Mut, Pioniergeist, Durchsetzungsstärke — erstes Zeichen, Feuer",t:"stärke,mut,führung,energie"},
+    {n:"Stier ♉",g:"♉",b:"Beständigkeit, Sinnlichkeit, Genuss des Lebens — Erde, Venus",t:"stärke,sinnlichkeit,ausdauer,stabilität"},
+    {n:"Zwillinge ♊",g:"♊",b:"Wandlungsfähigkeit, Neugier, Kommunikation — Luft, Merkur",t:"transformation,weisheit,kreativität"},
+    {n:"Krebs ♋",g:"♋",b:"Fürsorge, Intuition, emotionale Tiefe — Wasser, Mond",t:"liebe,intuition,schutz,heimat"},
+    {n:"Löwe ♌",g:"♌",b:"Führung, Leidenschaft, königliche Würde — Feuer, Sonne",t:"stärke,führung,leidenschaft,mut"},
+    {n:"Jungfrau ♍",g:"♍",b:"Perfektion, Dienst, analytische Stärke — Erde, Merkur",t:"weisheit,ausdauer,heilung"},
+    {n:"Waage ♎",g:"♎",b:"Gleichgewicht, Harmonie, Schönheitssinn — Luft, Venus",t:"gleichgewicht,harmonie,schönheit,liebe"},
+    {n:"Skorpion ♏",g:"♏",b:"Transformation, Tiefe, Leidenschaft und Geheimnis — Wasser, Pluto",t:"transformation,sinnlichkeit,stärke,geheimnis"},
+    {n:"Schütze ♐",g:"♐",b:"Freiheit, Philosophie, Abenteuer — Feuer, Jupiter",t:"freiheit,weisheit,abenteuer,erfolg"},
+    {n:"Steinbock ♑",g:"♑",b:"Disziplin, Ehrgeiz, Ausdauer — Erde, Saturn",t:"ausdauer,erfolg,stärke,disziplin"},
+    {n:"Wassermann ♒",g:"♒",b:"Individualität, Revolution, Humanismus — Luft, Uranus",t:"freiheit,identität,transformation"},
+    {n:"Fische ♓",g:"♓",b:"Mitgefühl, Intuition, spirituelle Tiefe — Wasser, Neptun",t:"spirituell,liebe,intuition,transformation"},
+    {n:"Sonne ☉",g:"☉",b:"Das bewusste Selbst, Lebensenergie, Identität",t:"stärke,licht,identität,energie"},
+    {n:"Mond ☽",g:"☽",b:"Unbewusstes, Intuition, weibliche Kraft, Zyklen",t:"intuition,weiblichkeit,spirituell,zyklus"},
+    {n:"Aszendent",g:"⬆",b:"Die Maske die wir tragen — wie andere uns sehen",t:"identität,transformation"},
+  ],
+
+  // ===== CHINESISCHER TIERKREIS =====
+  tierkreis_china:[
+    {n:"Ratte 鼠",g:"🐀",b:"Klugheit, Anpassungsfähigkeit, Einfallsreichtum — erstes Tier",t:"weisheit,erfolg,anpassung"},
+    {n:"Ochse 牛",g:"🐂",b:"Fleiß, Zuverlässigkeit, Beharrlichkeit — stille Stärke",t:"stärke,ausdauer,stabilität"},
+    {n:"Tiger 虎",g:"🐅",b:"Mut, Energie, Unabhängigkeit — König des Waldes",t:"stärke,mut,führung,wildnis"},
+    {n:"Hase 兔",g:"🐇",b:"Glück, Eleganz, Sanftheit — Mondtier, Longevität",t:"glück,schönheit,frieden,intuition"},
+    {n:"Drache 龙",g:"龍",b:"Macht, Glück, göttlicher Schutz — einziges Fabeltier",t:"stärke,glück,schutz,macht"},
+    {n:"Schlange 蛇",g:"🐍",b:"Weisheit, Intuition, Anmut — tiefes Wissen",t:"weisheit,intuition,sinnlichkeit,transformation"},
+    {n:"Pferd 马",g:"🐎",b:"Freiheit, Ausdauer, Energie — ungezähmter Geist",t:"freiheit,stärke,energie,ausdauer"},
+    {n:"Ziege 羊",g:"🐑",b:"Kreativität, Sanftmut, Empathie — künstlerische Seele",t:"kreativität,liebe,schönheit,harmonie"},
+    {n:"Affe 猴",g:"🐒",b:"Intelligenz, Verspieltheit, Erfindungsreichtum",t:"weisheit,kreativität,freiheit"},
+    {n:"Hahn 鸡",g:"🐓",b:"Fleiß, Selbstbewusstsein, Ehrlichkeit — kündigt den Tag an",t:"mut,erfolg,identität"},
+    {n:"Hund 狗",g:"🐕",b:"Treue, Ehrlichkeit, Loyalität — treuester Begleiter",t:"treue,liebe,schutz"},
+    {n:"Schwein 猪",g:"🐖",b:"Glück, Großzügigkeit, Aufrichtigkeit — letztes Zeichen",t:"glück,liebe,erfolg"},
+  ],
+
+  // ===== STERNBILDER =====
+  sternbilder:[
+    {n:"Orion — Jäger",g:"⭐",b:"Stärke, Jagd, Mythos — der mächtigste Jäger des Himmels",t:"stärke,mut,führung"},
+    {n:"Großer Bär — Ursa Major",g:"🐻",b:"Orientierung, Beständigkeit, Mutterkraft",t:"schutz,stärke,heimat"},
+    {n:"Kleiner Bär — Polarstern",g:"✦",b:"Orientierung, Unerschütterlichkeit — immer da",t:"orientierung,stärke,ewigkeit"},
+    {n:"Kassiopeia",g:"✺",b:"Schönheit, Eitelkeit, Unsterblichkeit — zur Königin gemacht",t:"schönheit,identität,ewigkeit"},
+    {n:"Perseus",g:"⚔",b:"Heldenreise, Mut, Befreiung — tötete Medusa",t:"mut,stärke,transformation"},
+    {n:"Andromeda",g:"⛓",b:"Befreiung, Glaube, Schicksal wenden",t:"transformation,freiheit,liebe"},
+    {n:"Pegasus — Geflügeltes Pferd",g:"🐴",b:"Inspiration, Freiheit des Geistes, kreative Kraft",t:"freiheit,kreativität,transformation"},
+    {n:"Löwe — Leo",g:"🦁",b:"Kraft, Königlichkeit, Würde am Sommerhimmel",t:"stärke,führung,mut"},
+    {n:"Skorpion — Scorpius",g:"🦂",b:"Geheimnis, Stärke, Transformation",t:"stärke,transformation,geheimnis"},
+    {n:"Schwan — Cygnus",g:"🦢",b:"Anmut, Wandel, das Zwischen den Welten",t:"schönheit,transformation,spirituell"},
+    {n:"Adler — Aquila",g:"🦅",b:"Zeus Bote, Stärke, göttliche Verbindung",t:"stärke,freiheit,spirituell"},
+    {n:"Delphin — Delphinus",g:"🐬",b:"Rettung, Freude, Verbindung",t:"liebe,freiheit,freude"},
+    {n:"Drache — Draco",g:"🐉",b:"Hüter des Himmels, Ewigkeit, Schutz",t:"schutz,stärke,ewigkeit"},
+    {n:"Herkules",g:"💪",b:"Unüberwindliche Stärke, zwölf Aufgaben",t:"stärke,mut,ausdauer"},
+    {n:"Zwillinge — Gemini",g:"♊",b:"Dualität, Verbindung, Bruderschaft",t:"liebe,verbindung,transformation"},
+    {n:"Jungfrau — Virgo",g:"🌾",b:"Ernte, Schönheit, kosmische Ordnung",t:"harmonie,schönheit,weisheit"},
+    {n:"Fische — Pisces",g:"🐟",b:"Tiefe Weisheit, Mitgefühl, Übergang",t:"spirituell,intuition,liebe"},
+    {n:"Steinbock — Capricornus",g:"🐐",b:"Ziege-Fisch: Wildheit und Tiefe in einem",t:"stärke,ausdauer,transformation"},
+    {n:"Phönix",g:"🔥",b:"Wiedergeburt aus der Asche — südliches Sternbild",t:"transformation,neubeginn,stärke"},
+    {n:"Einhorn — Monoceros",g:"🦄",b:"Reinheit, Magie, das Unzähmbare",t:"reinheit,spirituell,schönheit"},
+  ],
+
+  // ===== NORDISCHE / GERMANISCHE TIERE =====
+  tiere_nordisch:[
+    {n:"Wolf (Fenrir)",g:"🐺",b:"Ungezähmte Kraft, Schicksal, Unaufhaltsamkeit — Odins Feind",t:"stärke,wildnis,transformation"},
+    {n:"Rabe Huginn",g:"🦅",b:"Huginn = Gedanke — Odins Gedächtnisrabe, Weisheit",t:"weisheit,geist,spirituell"},
+    {n:"Rabe Muninn",g:"🦅",b:"Muninn = Erinnerung — alles Vergangene, Gedächtnis",t:"weisheit,erinnerung,spirituell"},
+    {n:"Bär (Berserker)",g:"🐻",b:"Kriegergeist, Unbesiegbarkeit — Berserker trugen Bärenfelle",t:"stärke,mut,wildnis"},
+    {n:"Adler (Weltenauge)",g:"🦅",b:"Sitzt auf Yggdrasils Spitze — Weitblick, Überblick",t:"weisheit,freiheit,spirituell"},
+    {n:"Schlange Níðhöggr",g:"🐍",b:"Zernagt den Weltbaum — ewige Erneuerung durch Zerstörung",t:"transformation,ewigkeit,wildnis"},
+    {n:"Eichhörnchen Ratatoskr",g:"🐿",b:"Verbindet Adler und Schlange — Kommunikator zwischen den Welten",t:"verbindung,weisheit,transformation"},
+    {n:"Hirsch Eikþyrnir",g:"🦌",b:"Lebt auf Walhalls Dach — Quell aller Flüsse, Ursprung",t:"spirituell,neubeginn,natur"},
+    {n:"Ziegenbock Tanngrisnir",g:"🐐",b:"Thors Ziegenbock — wird getötet und täglich neu geboren",t:"neubeginn,stärke,transformation"},
+    {n:"Wölfe Geri & Freki",g:"🐺",b:"Odins Wölfe — gefräßiger Begleiter, Kriegsgeist",t:"stärke,führung,wildnis"},
+    {n:"Drache Fáfnir",g:"🐉",b:"Verwandelte sich aus Gier — Hüter des Schatzes, Warnung",t:"transformation,stärke,warnung"},
+    {n:"Katze Freyas",g:"🐈",b:"Zwei große Katzen ziehen Freyas Wagen — Weiblichkeit, Stärke",t:"stärke,weiblichkeit,sinnlichkeit"},
+  ],
+
+  // ===== ÄGYPTISCHE TIERE =====
+  tiere_aegypten:[
+    {n:"Katze (Bastet)",g:"🐈",b:"Göttin des Hauses — Schutz, Mutterschaft, weibliche Stärke",t:"schutz,weiblichkeit,sinnlichkeit"},
+    {n:"Falke (Horus)",g:"🦅",b:"Himmelsgott, Auge des Horus — Königtum, göttliche Führung",t:"stärke,führung,spirituell"},
+    {n:"Ibis (Thoth)",g:"🦤",b:"Gott der Schrift — Weisheit, Magie, Sprache",t:"weisheit,kreativität,spirituell"},
+    {n:"Krokodil (Sobek)",g:"🐊",b:"Nilgott — Macht, Fruchtbarkeit, Schutz",t:"stärke,schutz,macht"},
+    {n:"Kobra (Wadjet)",g:"🐍",b:"Schutzgöttin Unterägyptens — göttliche Wacht, Königsschutz",t:"schutz,stärke,macht"},
+    {n:"Skarabäus (Khepri)",g:"🪲",b:"Morgensonnen-Gott — Wiedergeburt, täglich neu",t:"neubeginn,transformation,spirituell"},
+    {n:"Schakal (Anubis)",g:"🐺",b:"Totenwächter — Übergang, Seelengeleiter, Schutz der Toten",t:"transformation,schutz,spirituell"},
+    {n:"Kuh (Hathor)",g:"🐄",b:"Göttin der Freude — Schönheit, Musik, Mutterschaft",t:"liebe,schönheit,weiblichkeit"},
+    {n:"Widder (Amun)",g:"🐏",b:"König der Götter — Verborgene Macht, Schöpfung",t:"stärke,macht,spirituell"},
+    {n:"Löwin (Sekhmet)",g:"🦁",b:"Kriegs- und Heilgöttin — Dualität, Feuer, Schutz",t:"stärke,heilung,weiblichkeit"},
+    {n:"Ibis-Mensch (Thot)",g:"𓅓",b:"Schreibergott — Hieroglyphen, Wissen, Magie",t:"weisheit,kreativität,spirituell"},
+    {n:"Bennu-Vogel",g:"🦢",b:"Heiliger Vogel von Heliopolis — Ursprung, Sonnenaufgang",t:"neubeginn,spirituell,licht"},
+    {n:"Sphinx",g:"🦁",b:"Hüterin der Geheimnisse — Weisheit und Stärke vereint",t:"weisheit,stärke,geheimnis"},
+  ],
+
+  // ===== NATIVE AMERICAN TIERE =====
+  tiere_nativ:[
+    {n:"Adler — Weißkopf",g:"🦅",b:"Verbindung zum Großen Geist — höchstes spirituelles Tier, Gebet",t:"spirituell,freiheit,führung"},
+    {n:"Wolf — Lehrmeister",g:"🐺",b:"Lehrer, Weggefährte, Intuition — führt das Rudel mit Weisheit",t:"weisheit,führung,intuition"},
+    {n:"Bär — Heiler",g:"🐻",b:"Medizin-Tier par excellence — Stärke und Heilkraft",t:"stärke,heilung,schutz"},
+    {n:"Büffel — Großes Geschenk",g:"🦬",b:"Alles kommt vom Büffel — Fülle, Dankbarkeit, Opfer",t:"erfolg,schutz,spirituell"},
+    {n:"Eule — Todesbotin",g:"🦉",b:"Wächter der Unterwelt, Weisheit — sieht was andere nicht sehen",t:"weisheit,transformation,spirituell"},
+    {n:"Rabe — Schöpfer",g:"🦅",b:"Trickster und Schöpfer — brachte das Licht in die Welt",t:"transformation,kreativität,spirituell"},
+    {n:"Falke — Botschafter",g:"🦅",b:"Himmelsbotschafter — Beobachter, Schnelligkeit, Fokus",t:"freiheit,weisheit,stärke"},
+    {n:"Schildkröte — Mutter Erde",g:"🐢",b:"Turtle Island — trägt die Welt, Ausdauer, Weisheit",t:"heimat,ausdauer,spirituell"},
+    {n:"Schlange — Heilerin",g:"🐍",b:"Häutung = Erneuerung — Heilung, Weisheit, Transformation",t:"heilung,transformation,weisheit"},
+    {n:"Kolibri — Freude",g:"🐦",b:"Bringt Liebe und Freude — kleinste, aber wundersamste Kraft",t:"liebe,freude,freiheit"},
+    {n:"Hirsch — Sensibler Führer",g:"🦌",b:"Sanftheit als Stärke — führt durch Empfindsamkeit",t:"führung,liebe,spirituell"},
+    {n:"Puma — Weibliche Kraft",g:"🦁",b:"Führerschaft, schnelle Entscheidungen — stille Macht",t:"stärke,führung,weiblichkeit"},
+    {n:"Waschbär — Trickster",g:"🦝",b:"Meister der Verkleidung — Anpassung, List, Dualität",t:"transformation,weisheit,kreativität"},
+    {n:"Elch — Selbstbewusstsein",g:"🫎",b:"Ausdauer und Stärke — hält pace über lange Zeit",t:"stärke,ausdauer,identität"},
+    {n:"Truthahn — Geschenk",g:"🦃",b:"Heiliges Tier — Fülle, Dankbarkeit, Gabe des Lebens",t:"erfolg,spirituell,liebe"},
+  ],
+
+  // ===== JAPANISCHE TIERE =====
+  tiere_japan:[
+    {n:"Kitsune — Fuchs",g:"🦊",b:"Vielschichtige Magie — je mehr Schwänze, desto weiser und mächtiger",t:"weisheit,transformation,sinnlichkeit"},
+    {n:"Tanuki — Marderhund",g:"🦝",b:"Gestaltenwandler, Glück, Freude — charmanter Trickster",t:"glück,kreativität,transformation"},
+    {n:"Kirin — Einhorn",g:"🦒",b:"Chinesisch-japanisches Fabelwesen — Gerechtigkeit, Reinheit, seltenes Glück",t:"reinheit,glück,spirituell"},
+    {n:"Tengu — Berggeist",g:"🦅",b:"Halbmensch-Halbvogel — Krieger, Wächter der Wälder",t:"stärke,weisheit,schutz"},
+    {n:"Ryu — Drache",g:"龍",b:"Wassergott — bringt Regen und Glück, göttlicher Schutz",t:"schutz,glück,macht"},
+    {n:"Koi — Tapferkeit",g:"🐟",b:"Schwimmt gegen den Strom und wird zum Drachen — Transformation",t:"mut,ausdauer,transformation"},
+    {n:"Tsuru — Kranich",g:"🦢",b:"1000 Origami-Kraniche erfüllen Wünsche — Langlebigkeit, Glück",t:"glück,heilung,ewigkeit"},
+    {n:"Schildkröte — Minogame",g:"🐢",b:"10.000 Jahre Langlebigkeit — Weisheit, Stabilität",t:"ausdauer,weisheit,ewigkeit"},
+    {n:"Tora — Tiger",g:"🐅",b:"Beschützer vor bösen Geistern — Norden, Mut, Stärke",t:"schutz,stärke,mut"},
+    {n:"Usagi — Hase",g:"🐇",b:"Mondtier — stampft den Reiskuchen, Glück und Erneuerung",t:"glück,neubeginn,liebe"},
+    {n:"Hebi — Schlange",g:"🐍",b:"Schutzgottheit des Hauses — nicht erschrecken, Glück bringt",t:"schutz,glück,weisheit"},
+    {n:"Kumo — Spinne",g:"🕷",b:"Alte Frauen als Spinnen verkleidet — Schöpferin, Netz des Lebens",t:"transformation,weisheit,kreativität"},
+  ],
+
+  // ===== KELTISCHE TIERE =====
+  tiere_keltisch:[
+    {n:"Hirsch — Cernunnos",g:"🦌",b:"König des Waldes — Seelenführer, Übergang zwischen Welten",t:"führung,spirituell,transformation"},
+    {n:"Hase — Mondgöttin",g:"🐇",b:"Heiliger Mondtier, Fruchtbarkeit — Mond und Wiedergeburt",t:"spirituell,neubeginn,weiblichkeit"},
+    {n:"Rabe — Morrigan",g:"🦅",b:"Kriegsgöttin Morrigan als Rabe — Prophetie, Übergang, Stärke",t:"stärke,transformation,weisheit"},
+    {n:"Lachs — Hazel-Weisheit",g:"🐟",b:"Aß die Haselnüsse der Weisheit — allwissendes Tier",t:"weisheit,spirituell,transformation"},
+    {n:"Schlange — Erneuerung",g:"🐍",b:"Häutet sich — ewig jung, Heilung, Übergang",t:"transformation,heilung,neubeginn"},
+    {n:"Adler — Rhiannon",g:"🦅",b:"Botschafter der Götter — himmlische Verbindung, Weitsicht",t:"freiheit,spirituell,weisheit"},
+    {n:"Wildschwein — Krieger",g:"🐗",b:"Stärkstes Tier im keltischen Denken — Kampfgeist, Tapferkeit",t:"stärke,mut,wildnis"},
+    {n:"Kuh — Heilige",g:"🐄",b:"Gibt Leben durch Milch — Fülle, Mutterkraft, Fürsorge",t:"liebe,schutz,weiblichkeit"},
+    {n:"Schwan — Seele",g:"🦢",b:"Seelen nehmen Schwanenform an — Reinheit, Liebe, Übergang",t:"spirituell,liebe,transformation"},
+    {n:"Hund — Treuer Begleiter",g:"🐕",b:"Heilungshund, Begleiter ins Jenseits — Treue, Schutz",t:"treue,schutz,heilung"},
+    {n:"Wolf — Rudel",g:"🐺",b:"Clan-Symbol, Krieger — Schutz des Stammes, Gemeinschaft",t:"stärke,schutz,heimat"},
+    {n:"Pferd — Epona",g:"🐎",b:"Göttin Epona reitet Pferd — Reise, Freiheit, Übergang",t:"freiheit,spirituell,transformation"},
+  ],
+
+  // ===== HINDUISTISCHE TIERE =====
+  tiere_hinduistisch:[
+    {n:"Elefant (Ganesha)",g:"🐘",b:"Überwinder von Hindernissen — Weisheit, Glück, neuer Anfang",t:"weisheit,glück,neubeginn,schutz"},
+    {n:"Kuh — Heilig",g:"🐄",b:"Mutter allen Lebens — Fürsorge, Heiligkeit, Fülle",t:"liebe,heilung,spirituell"},
+    {n:"Affe (Hanuman)",g:"🐒",b:"Gott Hanuman — Loyalität, unglaubliche Stärke, Hingabe",t:"stärke,liebe,mut"},
+    {n:"Kobra (Naga)",g:"🐍",b:"Schivas Halsschmuck — Schutz, Weisheit, kosmische Energie",t:"schutz,weisheit,spirituell"},
+    {n:"Pfau (Saraswati)",g:"🦚",b:"Göttin der Kunst trägt Pfauenfeder — Schönheit, Weisheit, Kunst",t:"schönheit,weisheit,kreativität"},
+    {n:"Tiger (Durga)",g:"🐅",b:"Göttin Durga reitet Tiger — weibliche Kriegerin, unbesiegbare Kraft",t:"stärke,weiblichkeit,mut"},
+    {n:"Ratte (Mushika)",g:"🐀",b:"Ganeshas Reittier — Bescheidenheit, Intelligenz, überwindet alles",t:"weisheit,erfolg,transformation"},
+    {n:"Garuda — Adlerwesen",g:"🦅",b:"Vishnus Reittier — übernatürliche Stärke, Feind der Schlangen",t:"stärke,spirituell,freiheit"},
+    {n:"Löwe (Narasimha)",g:"🦁",b:"Mensch-Löwe Avatar Vishnus — Schutz der Gläubigen",t:"schutz,stärke,spirituell"},
+    {n:"Schildkröte (Kurma)",g:"🐢",b:"Vishnus zweiter Avatar — trägt die Welt, Stabilität",t:"ausdauer,spirituell,stabilität"},
+    {n:"Hamsa — Schwan/Gans",g:"🦢",b:"Brahmas Reittier — spirituelle Reinheit, Seele, Transzendenz",t:"spirituell,reinheit,weisheit"},
+  ],
+
+  // ===== BUDDHISTISCHER TIERKREIS (12 Tier-Schutzgötter) =====
+  tiere_buddhist:[
+    {n:"Elefant — Bodhi",g:"🐘",b:"Weiß-Elefant Traum der Maya — Geburt Buddhas, Weisheit, Kraft",t:"weisheit,spirituell,stärke"},
+    {n:"Löwe — Dharma",g:"🦁",b:"Buddha sitzt auf Löwenthron — Mut, Schutz des Dharma",t:"stärke,schutz,spirituell"},
+    {n:"Pferd — Befreiung",g:"🐎",b:"Kanthaka trug Buddha in die Welt — Reise zur Erleuchtung",t:"freiheit,spirituell,transformation"},
+    {n:"Ochse — Erleuchtung",g:"🐂",b:"Zen: Ochse und Reiter — Suche nach dem wahren Selbst",t:"weisheit,spirituell,ausdauer"},
+    {n:"Schlange (Naga)",g:"🐍",b:"Schützte Buddha während Meditation — göttlicher Schutz, Weisheit",t:"schutz,weisheit,spirituell"},
+    {n:"Pfau — Dharma",g:"🦚",b:"Transformiert Gift in Schönheit — Weisheit aus Leiden",t:"transformation,weisheit,schönheit"},
+    {n:"Fisch (Goldfish)",g:"🐟",b:"Schwimmt frei im Meer — Freiheit, Glück, Überfluss",t:"freiheit,glück,spirituell"},
+    {n:"Krabbe — Karma",g:"🦀",b:"Seitwärtsbewegung — Karma-Weg, unerwartete Wege",t:"transformation,spirituell,weisheit"},
+    {n:"Hasen im Mond",g:"🐇",b:"Mondhasen mahlen die Unsterblichkeitspille — Opferbereitschaft",t:"spirituell,liebe,neubeginn"},
+    {n:"Makara — Meerestier",g:"🐉",b:"Halbdrache-Halbfisch — Schwelle zwischen Welten, Übergang",t:"transformation,spirituell,schutz"},
+    {n:"Suparna-Vogel",g:"🦅",b:"Riesiger heiliger Vogel — Freiheit, göttliche Kraft",t:"freiheit,spirituell,stärke"},
+    {n:"Reh — Erstes",g:"🦌",b:"Rehe hörten Buddhas erste Predigt — Sanftmut, erste Wahrheit",t:"spirituell,frieden,weisheit"},
+  ],
+
+  // ===== AZTEKISCHE TIERE =====
+  tiere_azteken:[
+    {n:"Jaguar — Krieger",g:"🐆",b:"Untergang-Sonne, nächtliche Kraft — Schamane, Krieger-Kaste",t:"stärke,mut,wildnis"},
+    {n:"Adler — Krieger",g:"🦅",b:"Tagsonne, höchster Krieger — Adler-Krieger-Orden",t:"stärke,mut,führung"},
+    {n:"Quetzal — Freiheit",g:"🦜",b:"Heiliger Vogel — Freiheit, Schönheit, stirbt in Gefangenschaft",t:"freiheit,schönheit,spirituell"},
+    {n:"Kolibri — Huitzilopochtli",g:"🐦",b:"Kriegsgott als Kolibri wiedergeboren — Krieger, Energie",t:"stärke,transformation,spirituell"},
+    {n:"Schlange — Quetzalcoatl",g:"🐍",b:"Gefiederte Schlange — Weisheit, Wind, Schöpfung",t:"weisheit,transformation,spirituell"},
+    {n:"Hund — Totenbegleiter",g:"🐕",b:"Xoloitzcuintli begleitet durch die Unterwelt — Treue bis zum Ende",t:"treue,transformation,schutz"},
+    {n:"Fledermaus — Unterwelt",g:"🦇",b:"Gott der Höhlen und Nacht — Übergang, Wiedergeburt",t:"transformation,spirituell,neubeginn"},
+    {n:"Kröte — Tlaltecuhtli",g:"🐸",b:"Erdgöttin — Erde selbst, Fruchtbarkeit, Tod und Leben",t:"spirituell,neubeginn,stärke"},
+    {n:"Adler-Kaktus-Schlange",g:"🦅",b:"Symbol Mexikos — Tenochtitlan, Schicksal, Macht",t:"identität,macht,spirituell"},
+    {n:"Xolotl — Nackter Hund",g:"🐕",b:"Begleiter der Toten — führt durch die Unterwelt sicher",t:"schutz,transformation,treue"},
+  ],
+
+  // ===== SLAWISCHE TIERE =====
+  tiere_slawisch:[
+    {n:"Zhar-Ptitsa — Feuervogel",g:"🔥",b:"Magischer Feuer-Vogel — Glück das man kaum fangen kann",t:"glück,transformation,spirituell"},
+    {n:"Bär — Veles",g:"🐻",b:"Totengott Veles als Bär — Unterwelt, Stärke, alter Glaube",t:"stärke,spirituell,transformation"},
+    {n:"Wolf — Perun",g:"🐺",b:"Gegner von Veles — Donnergott, Krieger, Schutz",t:"stärke,schutz,mut"},
+    {n:"Schlange — Zmey",g:"🐍",b:"Drachen-Schlange — Weisheit und Bedrohung, Dualität",t:"stärke,weisheit,transformation"},
+    {n:"Falke — Sokol",g:"🦅",b:"Reinheit, Freiheit, Liebe — Symbol vieler slawischer Völker",t:"freiheit,liebe,stärke"},
+    {n:"Kuckuck — Schicksal",g:"🐦",b:"Zählt Lebensjahre — Schicksal, Prophezeiung, Zeit",t:"weisheit,transformation,spirituell"},
+    {n:"Nachtigall — Solovey",g:"🐦",b:"Gefangener Zaubervogel — Musik, Magie, verborgene Kraft",t:"kreativität,transformation,spirituell"},
+    {n:"Fuchs — Lisitsa",g:"🦊",b:"Schlau und listig — weibliche Magie, Cleverness",t:"weisheit,sinnlichkeit,transformation"},
+  ]
+,
+  tiere_nordisch:[
+    {n:"Rabe (Huginn & Muninn)",g:"🦅",b:"Odins Raben — Gedanke und Erinnerung",t:["weisheit","magie","spirituell","erinnerung","tier"]},
+    {n:"Wolf (Fenrir)",g:"🐺",b:"Kosmischer Wolf — unbändige Urkraft",t:["stärke","tod","magie","tier","wildnis"]},
+    {n:"Wolf (Freki & Geri)",g:"🐺",b:"Odins Wölfe — Instinkt, Loyalität",t:["treue","stärke","wildnis","tier"]},
+    {n:"Bär (Berserker)",g:"🐻",b:"Nordischer Krieger-Geist — Bärenkraft, Wildheit",t:["stärke","mut","wildnis","tier","männlichkeit"]},
+    {n:"Schlange (Jörmungandr)",g:"🐍",b:"Weltenschlange — kosmisches Chaos, Ewigkeit",t:["vergänglichkeit","magie","ewigkeit","tier","tod"]},
+    {n:"Adler (Hræsvelgr)",g:"🦅",b:"Riesenadler am Weltbaum — Wind und Weitblick",t:["freiheit","stärke","magie","tier"]},
+    {n:"Hirsch (Yggdrasil)",g:"🦌",b:"Hirsch auf Walhall — Erneuerung, Lebensquell",t:["neubeginn","spirituell","tier","natur"]}
+  ],
+  tiere_aegyptisch:[
+    {n:"Katze (Bastet)",g:"🐱",b:"Göttin Bastet — Schutz, weibliche Kraft",t:["schutz","weiblichkeit","tier","spirituell"]},
+    {n:"Ibis (Thoth)",g:"🦅",b:"Gott des Wissens — Weisheit, Schrift, Mondgott",t:["weisheit","magie","spirituell","tier"]},
+    {n:"Schakal (Anubis)",g:"🐺",b:"Totengott — Übergang, Gericht, Seelengeleite",t:["tod","spirituell","transformation","tier","trauer"]},
+    {n:"Falke (Horus)",g:"🦅",b:"Himmelsgott — König, Weitblick, göttlicher Schutz",t:["führung","schutz","spirituell","tier","männlichkeit"]},
+    {n:"Schlange (Wadjet)",g:"🐍",b:"Kobra-Göttin — Schutz der Pharaonen",t:["schutz","stärke","spirituell","tier","führung"]},
+    {n:"Krokodil (Sobek)",g:"🐊",b:"Gott des Nils — Urgewalt, Fruchtbarkeit",t:["stärke","natur","tier","magie"]},
+    {n:"Kuh (Hathor)",g:"🐄",b:"Göttin der Liebe — Fürsorge, Schönheit, Musik",t:["liebe","weiblichkeit","spirituell","tier","heilung"]}
+  ],
+  tiere_japanisch:[
+    {n:"Koi (Nishikigoi)",g:"🐟",b:"Kletternder Karpfen — Mut und Erfolg gegen Widerstände",t:["erfolg","mut","resilienz","tier"]},
+    {n:"Kitsune (Fuchs)",g:"🦊",b:"Magischer Fuchs — Weisheit, Verwandlung, göttlicher Bote",t:["magie","weisheit","transformation","trickster","tier"]},
+    {n:"Kranich (Tsuru)",g:"🦢",b:"1000 Kraniche — Langlebigkeit, Frieden, Geduld",t:["ewigkeit","hoffnung","tier","natur"]},
+    {n:"Drache (Ryū)",g:"🐉",b:"Japanischer Wasserdrache — Weisheit, Stärke, Naturgewalt",t:["weisheit","stärke","magie","tier","natur"]},
+    {n:"Tiger (Tora)",g:"🐯",b:"Beschützer gegen das Böse — Mut, Wildheit",t:["mut","schutz","stärke","tier","wildnis"]},
+    {n:"Schildkröte (Kame)",g:"🐢",b:"Zehntausend Jahre Leben — Geduld, Weisheit",t:["weisheit","ewigkeit","resilienz","tier"]}
+  ],
+  tiere_keltisch:[
+    {n:"Hirsch (Cernunnos)",g:"🦌",b:"Gehörnter Gott — Wildnis, Fruchtbarkeit, Verbindung der Welten",t:["natur","spirituell","wildnis","tier","männlichkeit"]},
+    {n:"Rabe (Morrigan)",g:"🦅",b:"Kriegsgöttin — Schicksal, Tod, Prophetie",t:["tod","magie","transformation","tier","trauer"]},
+    {n:"Lachs des Wissens",g:"🐟",b:"Uralte Weisheit, Erkenntnis der Welt",t:["weisheit","magie","tier","spirituell"]},
+    {n:"Hase (Mondmagie)",g:"🐇",b:"Fruchtbarkeit, Mondmagie, Erneuerung",t:["neubeginn","weiblichkeit","magie","tier","natur"]},
+    {n:"Eber (Torc)",g:"🐗",b:"Keltischer Krieger-Eber — Kampfgeist, Tapferkeit",t:["mut","stärke","führung","tier","männlichkeit"]},
+    {n:"Schwan (Götterbotin)",g:"🦢",b:"Seele, Reinheit, Übergang zwischen Welten",t:["spirituell","magie","transformation","tier","trauer"]}
+  ],
+  tiere_griechisch:[
+    {n:"Eule (Athena)",g:"🦉",b:"Göttin der Weisheit — Klugheit, Gerechtigkeit",t:["weisheit","führung","spirituell","tier"]},
+    {n:"Adler (Zeus)",g:"🦅",b:"König der Götter — Macht, Weitblick, göttliche Botschaft",t:["führung","stärke","spirituell","tier","männlichkeit"]},
+    {n:"Schlange (Asklepios)",g:"🐍",b:"Heiliger Stab — Medizin, Heilung, Erneuerung",t:["heilung","weisheit","tier","neubeginn"]},
+    {n:"Delphin (Poseidon)",g:"🐬",b:"Meeresbote — Freiheit, Freude, Schutz",t:["freiheit","schutz","glück","tier","natur"]},
+    {n:"Pfau (Hera)",g:"🦚",b:"Göttin — Schönheit, Stolz, unsterbliche Augen",t:["weiblichkeit","ewigkeit","sinnlichkeit","tier"]},
+    {n:"Biene (Demeter)",g:"🐝",b:"Göttin der Ernte — Fleiß, Gemeinschaft, heilige Ordnung",t:["erfolg","einheit","natur","tier"]}
+  ],
+  tiere_chinesisch:[
+    {n:"Drache (Lóng)",g:"龍",b:"Kaiserliches Symbol — Macht, Glück, Weisheit",t:["führung","glück","weisheit","tier","magie"]},
+    {n:"Tiger (Hǔ)",g:"虎",b:"Schutz vor dem Bösen — Stärke, Mut, Herrschaft",t:["mut","schutz","stärke","tier","wildnis"]},
+    {n:"Phönix (Fènghuáng)",g:"鳳",b:"Kaiserlicher Vogel — Harmonie, Tugend, Wiedergeburt",t:["neubeginn","führung","weiblichkeit","tier","transformation"]},
+    {n:"Fledermaus (Biān Fú)",g:"蝠",b:"Glück durch Klang — Wohlstand, fünf Glücke",t:["glück","erfolg","tier","magie"]},
+    {n:"Karpfen (Lǐ Yú)",g:"鲤",b:"Spring über das Drachentor — Erfolg, Beharrlichkeit",t:["erfolg","resilienz","mut","tier","transformation"]}
+  ],
+  tiere_indianisch:[
+    {n:"Adler (Great Spirit)",g:"🦅",b:"Bote des Großen Geistes — Vision, Gebet, Himmel",t:["spirituell","freiheit","führung","tier","magie"]},
+    {n:"Wolf (Lehrmeister)",g:"🐺",b:"Lehrer der Wege — Loyalität, Familiensinn",t:["weisheit","treue","einheit","tier","wildnis"]},
+    {n:"Bär (Heilbringer)",g:"🐻",b:"Medizintier — Heilung, innere Stärke, Traumweisheit",t:["heilung","stärke","spirituell","tier","achtsamkeit"]},
+    {n:"Coyote (Trickster)",g:"🐺",b:"Listiger Schöpfer — Humor, Wandel, Lernlektionen",t:["trickster","magie","transformation","tier"]},
+    {n:"Büffel (Weißer Büffel)",g:"🐂",b:"Überfluss, Dankbarkeit, heilige Verpflichtung",t:["dankbarkeit","spirituell","natur","tier","einheit"]},
+    {n:"Schildkröte (Weltschildkröte)",g:"🐢",b:"Trägt die Welt — Mutter Erde, Geduld",t:["natur","ewigkeit","weisheit","tier","einheit"]}
+  ],
+  tiere_hinduistisch:[
+    {n:"Elefant (Ganesha)",g:"🐘",b:"Gott der Weisheit — Hindernisse überwinden, Neubeginn",t:["weisheit","neubeginn","glück","tier","spirituell"]},
+    {n:"Schlange (Naga)",g:"🐍",b:"Göttliche Schlangen — Schutz, Kundalini-Energie",t:["spirituell","schutz","magie","tier","transformation"]},
+    {n:"Affe (Hanuman)",g:"🐒",b:"Treuer Held — Stärke, Hingabe, Loyalität",t:["treue","stärke","spirituell","tier","mut"]},
+    {n:"Pfau (Saraswati)",g:"🦚",b:"Göttin der Künste — Schönheit, Wissen, Kreativität",t:["weisheit","sinnlichkeit","magie","tier","weiblichkeit"]},
+    {n:"Garuda",g:"🦅",b:"Vogel Vishnus — göttliche Kraft, Sieg, Freiheit",t:["stärke","freiheit","spirituell","tier","schutz"]}
+  ],
+  tiere_aztekisch:[
+    {n:"Jaguar (Tezcatlipoca)",g:"🐆",b:"Herr der Unterwelt — Nacht, Magie, verborgene Kraft",t:["magie","stärke","tod","tier","spirituell"]},
+    {n:"Adler (Krieger)",g:"🦅",b:"Aztekischer Kriegerorden — Sonne, Mut, göttlicher Kampf",t:["mut","stärke","führung","tier","männlichkeit"]},
+    {n:"Schlange (Quetzalcoatl)",g:"🐍",b:"Gefiederte Schlange — Weisheit, Schöpfung",t:["weisheit","magie","spirituell","tier","transformation"]},
+    {n:"Quetzal",g:"🦜",b:"Heiliger Vogel — Freiheit, Schönheit, nie gefangen",t:["freiheit","natur","spirituell","tier"]}
+  ],
+  tiere_insekten:[
+    {n:"Biene",g:"🐝",b:"Gemeinschaft, Fleiß, Süße des Lebens",t:["einheit","erfolg","natur","tier","dankbarkeit"]},
+    {n:"Libelle",g:"🪲",b:"Wandel — Illusion durchschauen, Leichtigkeit",t:["transformation","achtsamkeit","natur","tier","loslassen"]},
+    {n:"Motte",g:"🦋",b:"Sehnsucht nach Licht — Hingabe, spirituelle Anziehung",t:["spirituell","magie","trauer","tier","selbstliebe"]},
+    {n:"Spinne (Schicksalsspinnerin)",g:"🕷",b:"Weberin des Schicksals — Kreativität, göttliche Ordnung",t:["magie","weisheit","weiblichkeit","tier"]},
+    {n:"Schmetterling (Psyche)",g:"🦋",b:"Unsterbliche Seele — Leichtigkeit, Transformation",t:["spirituell","transformation","tier","tod"]}
+  ],
+  selbstliebe_achtsamkeit:[
+    {n:"Lotusblüte",g:"🪷",b:"Wächst aus dem Schlamm — Selbstentfaltung, innere Reinheit",t:["selbstliebe","achtsamkeit","wachstum","transformation","spirituell"]},
+    {n:"Om",g:"ॐ",b:"Urklang — Achtsamkeit, innerer Frieden",t:["achtsamkeit","spirituell","balance","selbstliebe"]},
+    {n:"Mandala",g:"◎",b:"Kreisförmige Ordnung — Zentrierung, Achtsamkeit",t:["balance","achtsamkeit","spirituell","selbstliebe"]},
+    {n:"Mondphasen",g:"🌙",b:"Zyklus, Akzeptanz, weibliche Energie",t:["selbstliebe","achtsamkeit","balance","intuition"]},
+    {n:"Sanduhr",g:"⏳",b:"Zeit verrinnt — Bewusstsein für den Moment",t:["vergänglichkeit","zeit","achtsamkeit"]},
+    {n:"Phönix",g:"🔥",b:"Aus Asche auferstehen — Stärke nach Zusammenbruch",t:["resilienz","transformation","neubeginn","selbstliebe"]},
+    {n:"Löwenzahn",g:"🌼",b:"Samen im Wind — Loslassen und Vertrauen",t:["loslassen","neubeginn","natur","hoffnung"]}
+  ]
+,
+  unalome:[
+    {n:"Unalome (klassisch)",g:"𑁍",b:"Buddhistisch — der gewundene Weg zur Erleuchtung. Spirale = Geburt & Verwirrung, Kurven = Lebenskämpfe, gerade Linie = Erleuchtung, Punkte = Auflösung ins Nichts",t:["spirituell","achtsamkeit","wachstum","selbstliebe","transformation","weisheit"]},
+    {n:"Unalome mit Lotus",g:"𑁍🪷",b:"Unalome + Lotusblüte — Erleuchtung und Reinheit vereint, Aufblühen am Ende des Weges",t:["spirituell","achtsamkeit","selbstliebe","wachstum","transformation","natur"]},
+    {n:"Unalome (weiblich / lunar)",g:"𑁍",b:"Spirale nach links — weibliche Mondenergie, intuitiver Weg, innere Weisheit",t:["weiblichkeit","intuition","spirituell","achtsamkeit","selbstliebe"]},
+    {n:"Unalome (männlich / solar)",g:"𑁍",b:"Spirale nach rechts — männliche Sonnenenergie, aktiver Weg, Entschlossenheit",t:["männlichkeit","mut","spirituell","achtsamkeit","stärke"]},
+    {n:"Unalome mit Om ॐ",g:"𑁍ॐ",b:"Unalome + Om — der Weg zur Erleuchtung beginnt mit dem Urklang",t:["spirituell","achtsamkeit","magie","transformation","weisheit"]}
+  ],
+  chakren:[
+    {n:"Muladhara — Wurzelchakra",g:"🔴",b:"1. Chakra · Rot · Erde · Überleben, Sicherheit, Verwurzelung. Sanskrit: मूलाधार. Lotusblüte mit 4 Blättern",t:["spirituell","stärke","resilienz","natur","balance","achtsamkeit"]},
+    {n:"Svadhisthana — Sakralchakra",g:"🟠",b:"2. Chakra · Orange · Wasser · Kreativität, Sexualität, Lebensfreude, Gefühle. Sanskrit: स्वाधिष्ठान. 6 Blätter",t:["spirituell","sinnlichkeit","weiblichkeit","selbstliebe","kreativität","achtsamkeit"]},
+    {n:"Manipura — Solarplexuschakra",g:"🟡",b:"3. Chakra · Gelb · Feuer · Willenskraft, Selbstvertrauen, Persönlichkeit. Sanskrit: मणिपूर. 10 Blätter",t:["spirituell","selbstliebe","stärke","mut","führung","achtsamkeit"]},
+    {n:"Anahata — Herzchakra",g:"💚",b:"4. Chakra · Grün/Rosa · Luft · Liebe, Mitgefühl, Selbstliebe, Heilung. Sanskrit: अनाहत. 12 Blätter",t:["spirituell","liebe","selbstliebe","heilung","einheit","achtsamkeit"]},
+    {n:"Vishuddha — Halschakra",g:"🔵",b:"5. Chakra · Blau · Äther · Kommunikation, Wahrheit, Ausdruck. Sanskrit: विशुद्ध. 16 Blätter",t:["spirituell","wahrheit","selbstliebe","weisheit","achtsamkeit"]},
+    {n:"Ajna — Stirnchakra / Drittes Auge",g:"🟣",b:"6. Chakra · Indigo · Licht · Intuition, inneres Sehen, Weisheit, Klarheit. Sanskrit: आज्ञा. 2 Blätter",t:["spirituell","intuition","weisheit","magie","achtsamkeit","selbstliebe"]},
+    {n:"Sahasrara — Kronenchakra",g:"🔮",b:"7. Chakra · Violett/Weiß · Bewusstsein · Erleuchtung, Einheit, Verbindung zum Göttlichen. Sanskrit: सहस्रार. 1000 Blätter",t:["spirituell","ewigkeit","einheit","weisheit","transformation","achtsamkeit"]},
+    {n:"Alle 7 Chakren (Säule)",g:"🌈",b:"Die Chakren-Säule vom Wurzel bis zur Krone — vollständige Energie, Ganzheit, Ausrichtung",t:["spirituell","balance","einheit","selbstliebe","heilung","achtsamkeit"]},
+    {n:"Chakra-Mandala",g:"◉",b:"Chakra als geometrisches Mandala — innere Mitte, Zentrierung, göttliche Ordnung",t:["spirituell","balance","achtsamkeit","magie","selbstliebe"]}
+  ],
+  hinduistisch_vedisch:[
+    {n:"Om ॐ / Aum",g:"ॐ",b:"Ursilbe des Universums — Vergangenheit, Gegenwart, Zukunft. Klangsymbol aller Schöpfung",t:["spirituell","achtsamkeit","magie","ewigkeit","einheit","selbstliebe"]},
+    {n:"Sri Yantra",g:"🔯",b:"Heiligste Geometrie des Hinduismus — kosmische Schöpfung, göttliche Energie, Fülle",t:["spirituell","magie","weiblichkeit","glück","einheit"]},
+    {n:"Bindu (Punkt)",g:"·",b:"Der heilige Punkt — Ursprung aller Manifestation, Bewusstsein, inneres Zentrum",t:["spirituell","achtsamkeit","ewigkeit","einheit"]},
+    {n:"Trishula (Dreizack Shivas)",g:"⋔",b:"Dreizack des Shiva — Schöpfung, Erhaltung, Zerstörung. Vergangenheit, Gegenwart, Zukunft",t:["spirituell","stärke","transformation","magie","männlichkeit"]},
+    {n:"Hamsa (Gotteshand)",g:"🤚",b:"Hand der Göttin — Schutz vor dem bösen Blick, Segen, Selbstliebe",t:["schutz","spirituell","selbstliebe","weiblichkeit"]},
+    {n:"Rudraksha (Samenkorn)",g:"🌰",b:"Heilige Perlen Shivas — spiritueller Schutz, Erdung, Gebet",t:["spirituell","schutz","achtsamkeit","natur"]}
+  ]
+,
+  okkultismus_hermetik:[
+    {n:"Pentagramm",g:"⛤",b:"Fünfzackiger Stern — 5 Elemente (Feuer, Wasser, Luft, Erde, Geist). Schutz, Balance, Magie",t:["magie","schutz","spirituell","balance","okkult"]},
+    {n:"Pentakel",g:"⛤",b:"Pentagramm im Kreis — gebundene Magie, Schutz, Erde und Geist vereint",t:["magie","schutz","spirituell","okkult","balance"]},
+    {n:"Hexagramm (Siegel Salomons)",g:"✡",b:"Zwei Dreiecke — Mikrokosmos & Makrokosmos, As above so below",t:["magie","spirituell","weisheit","okkult","einheit"]},
+    {n:"Auge der Vorsehung",g:"👁",b:"Allsehendes Auge — göttliche Allgegenwart, Wissen, Illumination",t:["weisheit","magie","okkult","spirituell","intuition"]},
+    {n:"As Above So Below",g:"☿",b:"Hermetisches Grundprinzip — was oben ist, ist unten. Entsprechung von Makro- und Mikrokosmos",t:["weisheit","magie","okkult","spirituell","einheit"]},
+    {n:"Caduceus (Hermesstab)",g:"⚕",b:"Stab des Hermes — zwei Schlangen, Balance der Gegensätze, Heilung, Kommunikation",t:["heilung","magie","balance","okkult","transformation"]},
+    {n:"Ouroboros",g:"🐍",b:"Schlange beißt Schwanz — ewiger Kreislauf, Selbsterneuerung, Unendlichkeit",t:["ewigkeit","transformation","magie","okkult","vergänglichkeit"]},
+    {n:"Schwarze Sonne",g:"☀",b:"Okkultes Sonnensymbol — verborgenes Licht, innere Erleuchtung, Transformation",t:["magie","transformation","okkult","tod","innere_stärke"]},
+    {n:"Chaos-Stern",g:"✳",b:"Acht Pfeile — Chaos-Magie, alle Möglichkeiten sind offen, keine feste Wahrheit",t:["magie","freiheit","okkult","transformation","chaos"]}
+  ],
+  okkultismus_alchemie:[
+    {n:"Stein der Weisen",g:"🔴",b:"Höchstes Ziel der Alchemie — Transformation, Unsterblichkeit, inneres Gold finden",t:["transformation","magie","okkult","weisheit","erfolg"]},
+    {n:"Azoth (Ursubstanz)",g:"☿",b:"Alchemistisches Allheilmittel — erste Materie, Quintessenz, göttliche Energie",t:["magie","okkult","transformation","spirituell","heilung"]},
+    {n:"Feuer-Dreieck △",g:"△",b:"Alchemistisches Feuer — Aufstieg, Energie, Wille, Transformation",t:["magie","okkult","innere_stärke","transformation","stärke"]},
+    {n:"Wasser-Dreieck ▽",g:"▽",b:"Alchemistisches Wasser — Abstieg, Intuition, Unbewusstes, Tiefe",t:["magie","okkult","intuition","weiblichkeit","achtsamkeit"]},
+    {n:"Luft-Dreieck",g:"△̄",b:"Alchemistische Luft — Verstand, Kommunikation, Freiheit",t:["magie","okkult","freiheit","weisheit","transformation"]},
+    {n:"Erde-Dreieck",g:"▽̄",b:"Alchemistische Erde — Körper, Stabilität, Materialität, Verwurzelung",t:["magie","okkult","balance","natur","resilienz"]},
+    {n:"Sol (Sonne/Gold ☉)",g:"☉",b:"Alchemistisches Gold — Vollkommenheit, Bewusstsein, das Höchste",t:["magie","okkult","erfolg","spirituell","männlichkeit"]},
+    {n:"Luna (Mond/Silber ☽)",g:"☽",b:"Alchemistisches Silber — Unbewusstes, Intuition, Weiblichkeit",t:["magie","okkult","intuition","weiblichkeit","spirituell"]},
+    {n:"Merkur (Quecksilber ☿)",g:"☿",b:"Alchemistischer Merkur — Wandel, Verbindung, Geist zwischen Welten",t:["magie","okkult","transformation","weisheit","trickster"]},
+    {n:"Rebis",g:"☿",b:"Der Hermaphrodit — männlich-weibliche Einheit nach der Großen Arbeit, Vollkommenheit",t:["einheit","magie","okkult","transformation","balance"]}
+  ],
+  okkultismus_kabbalah:[
+    {n:"Lebensbaum (Sephiroth)",g:"✡",b:"10 Sephiroth des Lebensbaums — Struktur der göttlichen Emanation, Weg zur Erleuchtung",t:["spirituell","weisheit","magie","okkult","einheit"]},
+    {n:"Kether (Krone)",g:"👑",b:"Höchste Sephira — Einheit mit dem Göttlichen, reines Sein, Ursprung",t:["spirituell","führung","magie","okkult","ewigkeit"]},
+    {n:"Malkuth (Königreich)",g:"⬡",b:"Unterste Sephira — die physische Welt, Verwurzelung im Körper",t:["spirituell","natur","balance","okkult","resilienz"]},
+    {n:"Ain Soph (Unendlichkeit)",g:"∞",b:"Das Grenzenlose — jenseits aller Vorstellung, ewiges Nichts und Alles",t:["ewigkeit","magie","spirituell","okkult","einheit"]},
+    {n:"Metatrons Würfel",g:"✡",b:"Heilige Geometrie — enthält alle platonischen Körper, Blaupause der Schöpfung",t:["magie","okkult","spirituell","balance","einheit"]}
+  ],
+  okkultismus_wicca:[
+    {n:"Dreifacher Mond (Triple Moon)",g:"☽○☾",b:"Maiden, Mother, Crone — die drei Gesichter der Göttin, Lebenszyklen der Frau",t:["weiblichkeit","spirituell","magie","okkult","transformation"]},
+    {n:"Triquetra (Dreiheit)",g:"☘",b:"Keltisch-wiccanisches Symbol — Drei-Einigkeit, ewiger Kreislauf, Verbindung",t:["einheit","spirituell","magie","okkult","ewigkeit"]},
+    {n:"Hexenknotenwerk",g:"🔯",b:"Witches Knot — Schutz, gebundene Magie, Verbindung der Elemente",t:["schutz","magie","okkult","einheit","spirituell"]},
+    {n:"Gehörnter Gott",g:"🌙",b:"Wiccanischer Gott — Wildnis, Jagd, Tod und Wiedergeburt, männliche Energie",t:["männlichkeit","natur","spirituell","magie","okkult"]},
+    {n:"Grüner Mann",g:"🌿",b:"Gesicht aus Blättern — Natur, Fruchtbarkeit, Wildwuchs, Wiedergeburt",t:["natur","spirituell","neubeginn","magie","okkult"]}
+  ],
+  okkultismus_tarot:[
+    {n:"Der Narr (0)",g:"🃏",b:"Reiner Anfang — Abenteuer, Vertrauen ins Unbekannte, Neubeginn ohne Angst",t:["neubeginn","freiheit","mut","magie","transformation"]},
+    {n:"Der Magier (I)",g:"✋",b:"Willenskraft — Manifestation, alle Werkzeuge sind vorhanden, handle jetzt",t:["stärke","weisheit","magie","okkult","führung"]},
+    {n:"Die Hohepriesterin (II)",g:"🌙",b:"Verborgenes Wissen — Intuition, Geheimnis, inneres Wissen, Geduld",t:["intuition","weisheit","weiblichkeit","magie","okkult"]},
+    {n:"Die Herrscherin (III)",g:"♀",b:"Weibliche Schöpferkraft — Fülle, Natur, Kreativität, Fürsorge",t:["weiblichkeit","natur","liebe","magie","okkult"]},
+    {n:"Der Eremit (IX)",g:"🕯",b:"Innere Suche — Einsamkeit als Kraft, Selbstreflexion, inneres Licht",t:["weisheit","selbstliebe","achtsamkeit","magie","okkult"]},
+    {n:"Das Rad des Schicksals (X)",g:"☸",b:"Unaufhaltsamer Wandel — Karma, Zyklen, alles dreht sich weiter",t:["transformation","vergänglichkeit","magie","okkult","zeit"]},
+    {n:"Der Tod (XIII)",g:"💀",b:"Nicht Ende sondern Wandel — Transformation, loslassen, Platz für Neues",t:["transformation","loslassen","magie","okkult","tod"]},
+    {n:"Der Stern (XVII)",g:"⭐",b:"Hoffnung nach der Dunkelheit — Heilung, Erneuerung, Vertrauen",t:["hoffnung","heilung","magie","okkult","neubeginn"]},
+    {n:"Der Mond (XVIII)",g:"🌕",b:"Illusion und Unterbewusstes — Träume, Ängste, verborgene Wahrheit",t:["intuition","magie","okkult","weiblichkeit","transformation"]},
+    {n:"Die Sonne (XIX)",g:"☀",b:"Freude und Klarheit — Erfolg, Wahrheit, Lebensenergie, Kindheit",t:["glück","erfolg","magie","okkult","hoffnung"]},
+    {n:"Die Welt (XXI)",g:"🌍",b:"Vollendung — Ziel erreicht, Ganzheit, Einheit, neuer Zyklus beginnt",t:["einheit","erfolg","transformation","magie","okkult"]}
+  ],
+  heilige_geometrie:[
+    {n:"Blume des Lebens",g:"❀",b:"Muster aller Existenz — in allen Kulturen gefunden, kosmische Blaupause",t:["magie","okkult","spirituell","einheit","ewigkeit"]},
+    {n:"Vesica Piscis",g:"🐟",b:"Zwei überlappende Kreise — Verbindung, Schöpfung, göttliche Mutter",t:["magie","okkult","spirituell","weiblichkeit","einheit"]},
+    {n:"Fibonacci-Spirale",g:"🌀",b:"Goldener Schnitt in der Natur — göttliche Proportion, Wachstum, Harmonie",t:["natur","magie","balance","wachstum","okkult"]},
+    {n:"Torus",g:"◎",b:"Donut-Form des Universums — Selbstversorgung, Fluss, unendliche Energie",t:["magie","okkult","ewigkeit","einheit","spirituell"]},
+    {n:"Platonische Körper",g:"⬡",b:"Tetraeder, Würfel, Oktaeder, Dodekaeder, Ikosaeder — Bausteine der Realität",t:["magie","okkult","weisheit","balance","spirituell"]},
+    {n:"Sri Yantra",g:"🔯",b:"Heiligste hinduistische Geometrie — 9 Dreiecke, kosmische Schöpfungskraft",t:["magie","okkult","spirituell","weiblichkeit","glück"]},
+    {n:"Seed of Life",g:"✿",b:"Sieben Kreise — Schöpfungstage, Ursprung der Blume des Lebens",t:["magie","okkult","spirituell","neubeginn","einheit"]}
+  ]
+};
+const MEANS=[
+  {k:'freiheit',e:'🕊',t:'Freiheit & Unabhängigkeit'},
+  {k:'stärke',e:'💪',t:'Stärke & Mut'},
+  {k:'transformation',e:'🦋',t:'Transformation & Wandel'},
+  {k:'schutz',e:'🛡',t:'Schutz & Sicherheit'},
+  {k:'liebe',e:'❤️',t:'Liebe & Verbindung'},
+  {k:'neubeginn',e:'🌱',t:'Neubeginn & Heilung'},
+  {k:'weisheit',e:'🦉',t:'Weisheit & Wissen'},
+  {k:'identität',e:'🌟',t:'Identität & Herkunft'},
+  {k:'spirituell',e:'🔮',t:'Spiritualität & Glaube'},
+  {k:'ewigkeit',e:'∞',t:'Ewigkeit & Zeitlosigkeit'},
+  {k:'erfolg',e:'🏆',t:'Erfolg & Ziele'},
+  {k:'heilung',e:'💚',t:'Heilung & Gesundheit'},
+  {k:'sinnlichkeit',e:'🌹',t:'Sinnlichkeit & Leidenschaft'},
+  {k:'wildnis',e:'🐺',t:'Wildnis & Ungezähmtheit'},
+  {k:'führung',e:'👑',t:'Führung & Macht'},
+  {k:'intuition',e:'🌙',t:'Intuition & Geheimnis'},
+  {k:'glück',e:'🍀',t:'Glück & Fülle'},
+  {k:'selbstliebe',e:'🪞',t:'Selbstliebe & Selbstwert'},
+  {k:'achtsamkeit',e:'🧘',t:'Achtsamkeit & Präsenz'},
+  {k:'vergänglichkeit',e:'⏳',t:'Vergänglichkeit & Memento Mori'},
+  {k:'balance',e:'☯',t:'Balance & Harmonie'},
+  {k:'mut',e:'🦁',t:'Mut & Tapferkeit'},
+  {k:'hoffnung',e:'🌅',t:'Hoffnung & Zuversicht'},
+  {k:'einheit',e:'🕸',t:'Einheit & Verbundenheit'},
+  {k:'dankbarkeit',e:'🙏',t:'Dankbarkeit & Demut'},
+  {k:'resilienz',e:'🌊',t:'Resilienz & Widerstandskraft'},
+  {k:'wahrheit',e:'⚖',t:'Wahrheit & Authentizität'},
+  {k:'loslassen',e:'🍃',t:'Loslassen & Akzeptanz'},
+  {k:'wachstum',e:'🌿',t:'Wachstum & Entfaltung'},
+  {k:'trauer',e:'🌑',t:'Trauer & Verlust'},
+  {k:'erinnerung',e:'📿',t:'Erinnerung & Hommage'},
+  {k:'tod',e:'💀',t:'Tod & Vergänglichkeit'},
+  {k:'magie',e:'✨',t:'Magie & Mysterium'},
+  {k:'natur',e:'🌲',t:'Natur & Verbundenheit'},
+  {k:'zeit',e:'⌛',t:'Zeit & Vergänglichkeit'},
+  {k:'tier',e:'🐾',t:'Tiersymbolik & Krafttiere'},
+  {k:'trickster',e:'🦊',t:'Trickster & List'},
+  {k:'treue',e:'🐕',t:'Treue & Loyalität'},
+  {k:'weiblichkeit',e:'🌸',t:'Weiblichkeit & Mondenergie'},
+  {k:'männlichkeit',e:'⚡',t:'Männlichkeit & Sonnenenergie'},
+];
+const TRADS=[
+  {k:'nordisch',e:'⚡',t:'Nordisch / Runen',d:'Futhark, Vegvísir, Valknut'},
+  {k:'keltisch',e:'🍀',t:'Keltisch',d:'Knoten, Triquetra, Triskelion'},
+  {k:'aegyptisch',e:'𓂀',t:'Ägyptisch',d:'Ankh, Horus, Skarabäus'},
+  {k:'japanisch',e:'⛩',t:'Japanisch',d:'Enso, Koi, Torii, Drache'},
+  {k:'spirituell',e:'☯',t:'Spirituell / Universal',d:'Om, Lotus, Unalome, Mandala'},
+  {k:'amazigh',e:'ⵣ',t:'Amazigh / Berber',d:'Yaz, Tifinagh, Berbersymbole'},
+  {k:'astrologie',e:'✨',t:'Astrologie — Planeten',d:'Sonne, Mond, Venus, Mars & mehr'},
+  {k:'alchemie',e:'🔥',t:'Alchemie',d:'Feuer, Wasser, Erde, Luft'},
+  {k:'tribal',e:'🌊',t:'Tribal / Polynesisch',d:'Maori, Koru, Haida'},
+  {k:'griechisch',e:'🏛️',t:'Griechisch / Römisch',d:'Meander, Phi, Caduceus'},
+  {k:'aztekisch',e:'☀',t:'Aztekisch',d:'Sonnenstein, Quetzalcoatl'},
+  {k:'hinduistisch',e:'🕉',t:'Hinduistisch',d:'Ganesha, Trishula, Chakras'},
+  {k:'slawisch',e:'⭐',t:'Slawisch',d:'Kolowrat, Perun, Rod'},
+  {k:'voodoo',e:'🌺',t:'Voodoo / Adinkra',d:'Vévés, Sankofa, Gye Nyame'},
+  {k:'nativeamerican',e:'🪶',t:'Native American',d:'Traumfänger, Thunderbird'},
+  {k:'chinesisch',e:'🐉',t:'Chinesisch',d:'Bagua, Drache, Phönix'},
+  {k:'tierkreis_west',e:'♈',t:'Westlicher Tierkreis',d:'Aries bis Pisces — 12 Sternzeichen'},
+  {k:'tierkreis_china',e:'🐀',t:'Chinesischer Tierkreis',d:'Ratte, Ochse, Tiger … alle 12 Tiere'},
+  {k:'sternbilder',e:'🌌',t:'Sternbilder',d:'Orion, Großer Bär, Kassiopeia & mehr'},
+  {k:'tiere_nordisch',e:'🐺',t:'Nordische Tiere',d:'Fenrir, Huginn, Muninn, Berserker-Bär'},
+  {k:'tiere_aegypten',e:'🐈',t:'Ägyptische Tiere',d:'Bastet, Horus, Anubis, Sobek'},
+  {k:'tiere_nativ',e:'🦬',t:'Native American Tiere',d:'Adler, Wolf, Bär, Büffel, Rabe'},
+  {k:'tiere_japan',e:'🦊',t:'Japanische Tiere',d:'Kitsune, Tanuki, Kirin, Tengu'},
+  {k:'tiere_keltisch',e:'🦌',t:'Keltische Tiere',d:'Hirsch, Hase, Wildschwein, Schwan'},
+  {k:'tiere_hinduistisch',e:'🐘',t:'Hinduistische Tiere',d:'Ganesha, Garuda, Naga, Hamsa'},
+  {k:'tiere_buddhist',e:'🕊',t:'Buddhistische Tiere',d:'Elefant, Löwe, Pfau, Naga, Reh'},
+  {k:'tiere_azteken',e:'🐆',t:'Aztekische Tiere',d:'Jaguar, Adler, Quetzal, Kolibri'},
+  {k:'tiere_slawisch',e:'🔥',t:'Slawische Tiere',d:'Feuervogel, Zmey, Falke, Nachtigall'},
+];
+
+function suchen(q) {
+  var el = document.getElementById('res');
+  q = q.trim();
+  if (!q) {
+    el.innerHTML = '<div class="hint">Tippe einen Begriff — Ergebnisse erscheinen sofort.<br><br><b>Beispiele:</b> Selbstliebe · Wolf · Rabe · Chakra · Unalome · Pentagramm · Koi · Vergänglichkeit · Treue</div>';
+    return;
+  }
+  var ql = q.toLowerCase(), ws = ql.split(/\s+/);
+
+  // Kategorie-Labels
+  var catLabels = {
+    'nordisch':'⚡ Nordisch / Runen','keltisch':'🍀 Keltisch','aegyptisch':'𓂀 Ägyptisch',
+    'japanisch':'⛩ Japanisch','spirituell':'☯ Spirituell','amazigh':'ⵣ Amazigh / Berber',
+    'astrologie':'✨ Astrologie','alchemie':'🔥 Alchemie','tribal':'🌊 Tribal / Polynesisch',
+    'griechisch':'🏛 Griechisch','aztekisch':'☀ Aztekisch','hinduistisch':'🕉 Hinduistisch',
+    'slawisch':'⭐ Slawisch','voodoo':'🌺 Voodoo / Adinkra','nativeamerican':'🪶 Native American',
+    'chinesisch':'🐉 Chinesisch','tierkreis_west':'♈ Westlicher Tierkreis',
+    'tierkreis_china':'🐀 Chinesischer Tierkreis','sternbilder':'🌌 Sternbilder',
+    'tiere_nordisch':'🐺 Nordische Tiere','tiere_aegypten':'🐈 Ägyptische Tiere',
+    'tiere_nativ':'🦬 Native American Tiere','tiere_japan':'🦊 Japanische Tiere',
+    'tiere_keltisch':'🦌 Keltische Tiere','tiere_hinduistisch':'🐘 Hinduistische Tiere',
+    'tiere_buddhist':'🕊 Buddhistische Tiere','tiere_azteken':'🐆 Aztekische Tiere',
+    'tiere_slawisch':'🔥 Slawische Tiere','selbstliebe_achtsamkeit':'🪞 Selbstliebe & Achtsamkeit',
+    'unalome':'𑁍 Unalome','chakren':'🔮 Chakren','hinduistisch_vedisch':'🕉 Hinduistisch / Vedisch',
+    'okkultismus_hermetik':'⛤ Okkultismus & Hermetik','okkultismus_alchemie':'⚗ Alchemie',
+    'okkultismus_kabbalah':'✡ Kabbalah','okkultismus_wicca':'☽ Wicca & Hexerei',
+    'okkultismus_tarot':'🃏 Tarot','heilige_geometrie':'🌀 Heilige Geometrie',
+    'tiere_aegyptisch':'🐱 Ägyptische Tiere','tiere_japanisch':'🦊 Japanische Tiere',
+    'tiere_keltisch2':'🦌 Keltische Tiere','tiere_griechisch':'🦉 Griechische Tiere',
+    'tiere_chinesisch':'🐉 Chinesische Tiere','tiere_indianisch':'🦅 Native American Tiere',
+    'tiere_hinduistisch2':'🐘 Hinduistische Tiere','tiere_aztekisch':'🐆 Aztekische Tiere',
+    'tiere_insekten':'🐝 Insekten & Käfer','tiere_afrikanisch':'🦁 Afrikanische Tiere',
+    'vergaenglichkeit':'⏳ Vergänglichkeit','balance_harmonie':'☯ Balance & Harmonie',
+    'resilienz_loslassen':'🌊 Resilienz & Loslassen','mut_hoffnung':'🦁 Mut & Hoffnung',
+    'okkultismus_tarot2':'🃏 Tarot'
+  };
+
+  function matches(s) {
+    return ws.some(function(w) {
+      return s.n.toLowerCase().indexOf(w)>=0 ||
+        (s.b && s.b.toLowerCase().indexOf(w)>=0) ||
+        (s.t && Array.isArray(s.t) && s.t.some(function(t){ return t.indexOf(w)>=0; }));
+    });
+  }
+
+  function gUrl(n) { return 'https://www.google.com/search?q=Tattoo+'+encodeURIComponent(n)+'+Symbol+Bedeutung'; }
+
+  function karte(sym, name, desc, gold) {
+    return '<a class="karte'+(gold?' gold-karte':'')+'" href="'+gUrl(name)+'" target="_blank">'
+      +'<div class="sym-box">'+sym+'</div>'
+      +'<div class="karte-info"><div class="karte-name'+(gold?' gold':'')+'">'+name+'</div>'
+      +(desc?'<div class="karte-desc">'+desc+'</div>':'')+'</div>'
+      +'<span class="google-btn">Google →</span></a>';
+  }
+
+  var h = '';
+  var totalSym = 0;
+
+  // Bedeutungen
+  var fM = MEANS.filter(function(m) {
+    return ws.some(function(w) { return m.k.indexOf(w)>=0 || m.t.toLowerCase().indexOf(w)>=0; });
+  });
+  if (fM.length) {
+    h += '<div class="sek"><div class="sek-titel">Bedeutung & Symbolik ('+fM.length+')</div>';
+    fM.forEach(function(m){ h += karte(m.e, m.t, '', true); });
+    h += '</div>';
+  }
+
+  // Symbole gruppiert nach Kategorie
+  var grouped = {};
+  var groupOrder = [];
+  Object.entries(SYMBOLE).forEach(function(entry) {
+    var cat = entry[0], arr = entry[1];
+    var hits = arr.filter(matches);
+    if (hits.length > 0) {
+      grouped[cat] = hits;
+      groupOrder.push(cat);
+      totalSym += hits.length;
+    }
+  });
+
+  if (totalSym > 0) {
+    groupOrder.forEach(function(cat) {
+      var hits = grouped[cat];
+      var label = catLabels[cat] || cat;
+      h += '<div class="sek"><div class="sek-titel">'+label+' ('+hits.length+')</div>';
+      hits.forEach(function(s){ h += karte(s.g||s.e||'◆', s.n, s.b||'', false); });
+      h += '</div>';
+    });
+  }
+
+  // Traditionen
+  var fT = TRADS.filter(function(t) {
+    return ws.some(function(w) {
+      return t.k.indexOf(w)>=0 || t.t.toLowerCase().indexOf(w)>=0 || (t.d && t.d.toLowerCase().indexOf(w)>=0);
+    });
+  });
+  if (fT.length) {
+    h += '<div class="sek"><div class="sek-titel">Traditionen ('+fT.length+')</div>';
+    fT.forEach(function(t){ h += karte(t.e, t.t, t.d||'', false); });
+    h += '</div>';
+  }
+
+  if (!h) h = '<div class="leer">Keine Treffer für <b>'+q+'</b> — probiere: Wolf · Lotus · Chakra · Rabe</div>';
+  el.innerHTML = h;
+}
+</script>
+</body>
+</html>
